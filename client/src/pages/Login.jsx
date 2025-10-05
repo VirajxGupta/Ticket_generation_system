@@ -52,9 +52,9 @@ export default function LoginPage() {
 
         // Redirect based on role returned by backend
         if (data.user.role === "admin") {
-          navigate("/adminDashboard");
+          navigate("/supportdashboard");
         } else if (data.user.role === "employee") {
-          navigate("/dashboard");
+          navigate("/Employeedashboard");
         } else {
           navigate("/"); // fallback
         }

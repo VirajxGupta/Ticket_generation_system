@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ai-sdk/react": "^2.0.60",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.3",
     "@mui/material": "^7.3.3",
+    "@mui/x-charts": "^8.13.1",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
+    "ai": "^5.0.60",
     "axios": "^1.12.2",
     "dom": "^0.0.3",
     "lucide-react": "^0.544.0",
