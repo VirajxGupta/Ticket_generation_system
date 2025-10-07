@@ -18,6 +18,8 @@ import EmployeeSettingsPage from "./pages/Employee/EmployeeSetting.jsx"
 import ChatPage from "./pages/Employee/AIAssistant.jsx";
 import EmpKnowledgeBasePage from "./pages/Employee/EmployeeKnowledge.jsx"
 
+import CreateTicket from "./pages/Employee/CreateTicket.jsx";
+
 function App() {
   return (
     
@@ -52,6 +54,7 @@ function App() {
         <Route path="/employeeDashboardSettings" element={<EmployeeSettingsPage />} />
         <Route path="/employeeDashboardAIAssistant" element={<ChatPage />} />
         <Route path="/employeeDashboardKnowledge" element={<EmpKnowledgeBasePage />} />
+        <Route path="/newtickets" element={<CreateTicket />} />
       </Routes>
     </Router>
   );

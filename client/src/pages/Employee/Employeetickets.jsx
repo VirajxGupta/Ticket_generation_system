@@ -21,12 +21,11 @@ const ACCENT_COLOR = "#34d399"; // Vibrant Green
 const ACCENT_HOVER_COLOR = "#10b981"; // Darker Green on hover
 const TEXT_MUTED = "#9ca3af"; // Gray text for subtitles/descriptions
 const MAIN_BG_COLOR = "#000000"; // Deep Black
-const DARK_CARD_COLOR = 'rgba(3, 7, 18, 0.6)'; // Very dark, slight transparent background
+const DARK_CARD_COLOR = "rgba(3, 7, 18, 0.6)"; // Very dark, slight transparent background
 
 const CARD_GLOW_SHADOW = `0 10px 20px 0 rgba(16, 185, 129, 0.2)`;
-const CARD_HOVER_BG = 'rgba(52, 211, 153, 0.05)';
+const CARD_HOVER_BG = "rgba(52, 211, 153, 0.05)";
 // -----------------------------------------------------------
-
 
 // --- Mock Data Definitions (Unchanged) ---
 export const mockTickets = [
@@ -106,9 +105,7 @@ export const mockTickets = [
 // --- Utility Functions ---
 const DashboardLayout = ({ children }) => (
   // We use a simple Box to simulate the dashboard container for centering
-  <Box sx={{ flexGrow: 1, p: 0, bgcolor: MAIN_BG_COLOR }}>
-    {children}
-  </Box>
+  <Box sx={{ flexGrow: 1, p: 0, bgcolor: MAIN_BG_COLOR }}>{children}</Box>
 );
 
 const getTimeAgo = (date) => {
@@ -142,18 +139,18 @@ export default function EmployeeTicketPage() {
   }, [searchQuery]);
 
   // --- Custom Styles ---
-  
+
   const primaryButtonStyle = {
     background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
-    color: 'black',
-    fontWeight: 'bold',
+    color: "black",
+    fontWeight: "bold",
     borderRadius: 2,
     py: 1.5,
-    transition: 'background-color 0.3s, box-shadow 0.3s, transform 0.3s',
-    '&:hover': {
+    transition: "background-color 0.3s, box-shadow 0.3s, transform 0.3s",
+    "&:hover": {
       background: ACCENT_HOVER_COLOR,
       boxShadow: `0 0 15px 0 ${ACCENT_COLOR}`,
-      transform: 'translateY(-2px)',
+      transform: "translateY(-2px)",
     },
   };
 
@@ -171,7 +168,8 @@ export default function EmployeeTicketPage() {
   };
 
   const ticketCardBaseStyle = {
-    transition: "background-color 0.2s, border 0.2s, box-shadow 0.2s, transform 0.2s",
+    transition:
+      "background-color 0.2s, border 0.2s, box-shadow 0.2s, transform 0.2s",
     bgcolor: DARK_CARD_COLOR,
     color: "white",
     border: "1px solid rgba(52, 211, 153, 0.15)",
@@ -183,15 +181,21 @@ export default function EmployeeTicketPage() {
     color: ACCENT_COLOR,
     bgcolor: "rgba(52, 211, 153, 0.1)",
     height: 24,
-    fontSize: '0.75rem',
-    fontWeight: 'bold',
+    fontSize: "0.75rem",
+    fontWeight: "bold",
   };
 
   return (
     <DashboardLayout>
       {/* Central Content Container (Maximized Width & Centered) */}
-      <Box sx={{ maxWidth: MAX_CONTENT_WIDTH, mx: 'auto', p: 0, pt: { xs: 2, sm: 4 } }}>
-
+      <Box
+        sx={{
+          maxWidth: MAX_CONTENT_WIDTH,
+          mx: "auto",
+          p: 0,
+          pt: { xs: 2, sm: 4 },
+        }}
+      >
         {/* Header and Button Row */}
         <Grid
           container
@@ -201,7 +205,13 @@ export default function EmployeeTicketPage() {
           sx={{ mb: 4, px: 3 }}
         >
           <Grid item>
-            <Typography variant="h4" component="h1" fontWeight="bold" color="white" gutterBottom>
+            <Typography
+              variant="h4"
+              component="h1"
+              fontWeight="bold"
+              color="white"
+              gutterBottom
+            >
               My Tickets
             </Typography>
             <Typography variant="body1" color={TEXT_MUTED}>
@@ -211,7 +221,19 @@ export default function EmployeeTicketPage() {
           <Grid item>
             <Button
               component={MuiLink}
-              href="ickets/new"
+              href="/employeeDashboard"
+              variant="contained"
+              disableElevation
+              sx={{
+                ...primaryButtonStyle,
+                mr: 3, // Adds margin-right of 3 spacing units (24px)
+              }}
+            >
+              Dashboard
+            </Button>
+            <Button
+              component={MuiLink}
+              href="/newtickets"
               variant="contained"
               startIcon={<Add />}
               disableElevation
@@ -227,9 +249,9 @@ export default function EmployeeTicketPage() {
           sx={{
             ...ticketCardBaseStyle,
             mb: 4,
-            boxShadow: 'none',
+            boxShadow: "none",
             mx: 3, // Align card edges with header/list
-            p: 1.5 // Added padding around input
+            p: 1.5, // Added padding around input
           }}
         >
           <CardContent sx={{ p: 0 }}>
@@ -247,7 +269,7 @@ export default function EmployeeTicketPage() {
                   </InputAdornment>
                 ),
                 // Adjust height for larger search field
-                style: { height: 56, padding: 0 } 
+                style: { height: 56, padding: 0 },
               }}
               // Removed label to match the look of the Knowledge Base search bar
             />
@@ -255,7 +277,15 @@ export default function EmployeeTicketPage() {
         </Card>
 
         {/* Tickets List - Takes Full Content Width */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3, px: 3, pb: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            px: 3,
+            pb: 4,
+          }}
+        >
           {filteredTickets.length === 0 ? (
             <Card sx={ticketCardBaseStyle}>
               <CardContent sx={{ py: 6, textAlign: "center" }}>
@@ -290,58 +320,131 @@ export default function EmployeeTicketPage() {
                   }}
                 >
                   <CardContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                      
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 1.5,
+                      }}
+                    >
                       {/* Line 1: Ticket Info (Number, Category, Tags) */}
-                      <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          gap: 1,
+                        }}
+                      >
                         <Typography
                           variant="caption"
-                          sx={{ fontFamily: "monospace", color: ACCENT_COLOR, fontWeight: "bold", mr: 1, fontSize: '0.9rem' }}
+                          sx={{
+                            fontFamily: "monospace",
+                            color: ACCENT_COLOR,
+                            fontWeight: "bold",
+                            mr: 1,
+                            fontSize: "0.9rem",
+                          }}
                         >
                           {ticket.ticketNumber}
                         </Typography>
-                        <Chip label={ticket.category} size="small" variant="outlined" sx={ticketChipStyle} />
-                        {ticket.tags && ticket.tags.slice(0, 1).map((tag) => (
-                          <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ color: TEXT_MUTED, borderColor: TEXT_MUTED, height: 24, fontSize: '0.75rem' }} />
-                        ))}
+                        <Chip
+                          label={ticket.category}
+                          size="small"
+                          variant="outlined"
+                          sx={ticketChipStyle}
+                        />
+                        {ticket.tags &&
+                          ticket.tags
+                            .slice(0, 1)
+                            .map((tag) => (
+                              <Chip
+                                key={tag}
+                                label={tag}
+                                size="small"
+                                variant="outlined"
+                                sx={{
+                                  color: TEXT_MUTED,
+                                  borderColor: TEXT_MUTED,
+                                  height: 24,
+                                  fontSize: "0.75rem",
+                                }}
+                              />
+                            ))}
                       </Box>
 
                       {/* Line 2: Title */}
-                      <Typography variant="h6" component="h3" color="white" fontWeight="medium">
+                      <Typography
+                        variant="h6"
+                        component="h3"
+                        color="white"
+                        fontWeight="medium"
+                      >
                         {ticket.title}
                       </Typography>
 
                       {/* Line 3: Description */}
-                      <Typography variant="body2" color={TEXT_MUTED} sx={{
-                          overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", 
-                          WebkitLineClamp: 2, WebkitBoxOrient: "vertical", mb: 1,
+                      <Typography
+                        variant="body2"
+                        color={TEXT_MUTED}
+                        sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          mb: 1,
                         }}
                       >
                         {ticket.description}
                       </Typography>
 
                       {/* Line 4: Footer (Time, Source, Status) */}
-                      <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: { xs: 2, sm: 4 }, typography: "caption" }}>
-                        
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          flexWrap: "wrap",
+                          gap: { xs: 2, sm: 4 },
+                          typography: "caption",
+                        }}
+                      >
                         {/* Created Time */}
-                        <Box sx={{ display: "flex", alignItems: "center", color: TEXT_MUTED }}>
-                          <AccessTime sx={{ fontSize: 16, mr: 0.5, color: ACCENT_COLOR }} />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            color: TEXT_MUTED,
+                          }}
+                        >
+                          <AccessTime
+                            sx={{ fontSize: 16, mr: 0.5, color: ACCENT_COLOR }}
+                          />
                           <span>Created {getTimeAgo(ticket.createdAt)}</span>
                         </Box>
 
                         {/* Source */}
-                        <span style={{ color: TEXT_MUTED }}>Source: {ticket.source.toUpperCase()}</span>
+                        <span style={{ color: TEXT_MUTED }}>
+                          Source: {ticket.source.toUpperCase()}
+                        </span>
 
                         {/* Assigned Status */}
                         {ticket.assignedTo && (
-                          <span style={{ color: ACCENT_HOVER_COLOR, fontWeight: "bold" }}>
+                          <span
+                            style={{
+                              color: ACCENT_HOVER_COLOR,
+                              fontWeight: "bold",
+                            }}
+                          >
                             • Assigned
                           </span>
                         )}
-                        
+
                         {/* Status (Placeholder for more complex logic if needed) */}
                         {ticket.resolvedAt && (
-                          <span style={{ color: '#10b981', fontWeight: "bold" }}>
+                          <span
+                            style={{ color: "#10b981", fontWeight: "bold" }}
+                          >
                             • Resolved
                           </span>
                         )}

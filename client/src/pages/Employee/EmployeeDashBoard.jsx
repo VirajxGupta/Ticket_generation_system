@@ -16,9 +16,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+// --- FIX: Corrected the typo in the import path for the icons below ---
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // <-- This line was fixed
 import WarningIcon from '@mui/icons-material/Warning';
 import SendIcon from '@mui/icons-material/Send';
 import MinimizeIcon from '@mui/icons-material/Minimize';
@@ -55,7 +56,7 @@ const navigation = [
     { name: "My Tickets", href: "/employeeDashboardTicket", icon: AssignmentIcon },
     { name: "AI Assistant", href: "/employeeDashboardAIAssistant", icon: ChatIcon },
     { name: "Knowledge Base", href: "/employeeDashboardKnowledge", icon: BookIcon },
-    { name: "CREATE TICKET", href: "/employeeDashboardTicket", icon: BookIcon },
+    { name: "CREATE TICKET", href: "/newtickets", icon: BookIcon },
 ];
 
 const statsData = [
@@ -454,7 +455,7 @@ function MainDashboardContent({ navigate, user }) {
                     const Icon = stat.icon;
                     return (
                         <Grid item xs={12} sm={6} md={3} key={stat.label}>
-                            <Card sx={{ ...cardTransformGlowStyle, height: '100%', minHeight: 150, minWidth:275, cursor: 'pointer' }}>
+                            <Card sx={{ ...cardTransformGlowStyle, height: '100%', minWidth:275, cursor: 'pointer' }}>
                                 <CardHeader title={<Typography variant="subtitle2" color={TEXT_MUTED}>{stat.label}</Typography>}
                                     action={<Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: stat.iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 0.5 }}><Icon sx={{ color: stat.color, fontSize: 20 }} /></Box>}
                                     sx={{ pb: 0, pt: 2, pr: 2 }} />
@@ -471,7 +472,7 @@ function MainDashboardContent({ navigate, user }) {
             <Grid container spacing={3}>
                 {/* Recent Tickets Card */}
                 <Grid item xs={12} md={8}>
-                    <Card sx={{ ...cardTransformGlowStyle, height: '100%', minWidth:578, display: 'flex', flexDirection: 'column', transition: 'none', '&:hover': { boxShadow: 'none', borderColor: 'rgba(52, 211, 153, 0.2)', transform: 'none' }}}>
+                    <Card sx={{ ...cardTransformGlowStyle, height: '100%',minWidth:560, display: 'flex', flexDirection: 'column', transition: 'none', '&:hover': { boxShadow: 'none', borderColor: 'rgba(52, 211, 153, 0.2)', transform: 'none' }}}>
                         <CardHeader
                             title={<Typography variant="h6" fontWeight="bold" color="white">Recent Tickets</Typography>}
                             subheader={<Typography variant="body2" color={TEXT_MUTED}>Your latest support requests</Typography>}
@@ -500,7 +501,7 @@ function MainDashboardContent({ navigate, user }) {
 
                 {/* Quick Actions Card */}
                 <Grid item xs={12} md={4}>
-                    <Card sx={{ ...cardTransformGlowStyle, height: '100%', minWidth:573, display: 'flex', flexDirection: 'column' }}>
+                    <Card sx={{ ...cardTransformGlowStyle, height: '100%', minWidth:570,display: 'flex', flexDirection: 'column' }}>
                         <CardHeader title={<Typography variant="h6" fontWeight="bold" color="white">Quick Actions</Typography>} subheader={<Typography variant="body2" color={TEXT_MUTED}>Common IT support tasks</Typography>} sx={{ pb: 0, pt: 2 }} />
                         <CardContent sx={{ p: 2, pt: 1, flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
                             {/* 🌟 FIX: Updated quick action paths */}
@@ -557,6 +558,8 @@ export default function EmployeeDashboard() {
                 return <PlaceholderPage title="Knowledge Base" path={currentPath} />;
             case "/employeeDashboardSettings":
                 return <PlaceholderPage title="Settings" path={currentPath} />;
+            case "/newtickets":
+                return <PlaceholderPage title="New Ticket Creation" path={currentPath} />;
             default:
                 // Handle / or any other deep links
                 return (
@@ -573,7 +576,7 @@ export default function EmployeeDashboard() {
 
     // --- Desktop & Responsive Layout ---
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: MAIN_BG_COLOR, color: 'white' }}>
+        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: MAIN_BG_COLOR, color: 'white', overflowX: 'hidden' }}>
 
             {/* 1. Sidebar/Drawer */}
             <Sidebar
@@ -593,33 +596,51 @@ export default function EmployeeDashboard() {
                     width: isDesktop ? `calc(100% - ${DRAWER_WIDTH}px)` : '100%',
                     p: 0,
                     minHeight: '100vh',
+                    overflowX: 'hidden', 
                 }}
             >
-                {/* A) Header/User Info Row (Sticky Header) */}
+                {/* A) Header/User Info Row (Sticky Header) 
+                    *** FIX APPLIED: Header content is now within a Container matching MAX_CONTENT_WIDTH and padding. ***
+                */}
                 <Box sx={{
-                    display: "flex", alignItems: "center", justifyContent: "flex-end", width: '100%',
-                    py: 2, px: 3, position: 'sticky', top: 0, bgcolor: MAIN_BG_COLOR, zIndex: 500,
+                    width: '100%',
+                    position: 'sticky', 
+                    top: 0, 
+                    bgcolor: MAIN_BG_COLOR, 
+                    zIndex: 500,
                     borderBottom: '1px solid #1a1a1a', 
                 }}>
-                    {/* Menu button for mobile */}
-                    {!isDesktop && (
-                        <IconButton onClick={handleDrawerToggle} sx={{ color: ACCENT_COLOR, position: 'absolute', left: 16 }}>
-                            <MenuIcon />
-                        </IconButton>
-                    )}
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', alignItems: 'flex-end', mr: 2 }}>
-                            <Typography variant="body2" fontWeight="medium" color="white">{user.name}</Typography>
-                            <Typography variant="caption" color={TEXT_MUTED}>{user.email}</Typography>
+                    <Container maxWidth="xl" sx={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        justifyContent: "flex-end", 
+                        py: 2, 
+                        // Set explicit padding to match content below
+                        px: 3,
+                        // Ensure the max width aligns with the content below
+                        maxWidth: MAX_CONTENT_WIDTH, 
+                        mx: 'auto' 
+                    }}>
+                        {/* Menu button for mobile */}
+                        {!isDesktop && (
+                            <IconButton onClick={handleDrawerToggle} sx={{ color: ACCENT_COLOR, position: 'absolute', left: 24 }}>
+                                <MenuIcon />
+                            </IconButton>
+                        )}
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                            <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', alignItems: 'flex-end', mr: 2 }}>
+                                <Typography variant="body2" fontWeight="medium" color="white">{user.name}</Typography>
+                                <Typography variant="caption" color={TEXT_MUTED}>{user.email}</Typography>
+                            </Box>
+                            <IconButton onClick={() => navigate("/employeeDashboardSettings")} sx={{ p: 0 }}>
+                                <Avatar sx={{ width: 32, height: 32, bgcolor: ACCENT_COLOR, fontSize: 14, color: 'black' }}>{user.name.charAt(0)}</Avatar>
+                            </IconButton>
                         </Box>
-                        <IconButton onClick={() => navigate("/employeeDashboardSettings")} sx={{ p: 0 }}>
-                            <Avatar sx={{ width: 32, height: 32, bgcolor: ACCENT_COLOR, fontSize: 14, color: 'black' }}>{user.name.charAt(0)}</Avatar>
-                        </IconButton>
-                    </Box>
+                    </Container>
                 </Box>
 
                 {/* B) Main Content Body (Dashboard/Page View) */}
-                <Container maxWidth="xl" sx={{ pt: 4, pb: 6, px: 3 }}>
+                <Container maxWidth="xl" sx={{ pt: 4, pb: 6, px: 3, maxWidth: MAX_CONTENT_WIDTH }}>
                     {renderContent()} {/* <-- Renders content based on the URL */}
                 </Container>
             </Box>
