@@ -12,10 +12,136 @@ import {
   Select,
   FormControl,
   InputLabel,
+  CircularProgress, // Import for loading spinner
 } from "@mui/material";
-import { Bot } from "lucide-react";
+import { Bot, LogIn } from "lucide-react"; // Added LogIn icon for extra touch
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+
+// --- Theme Styles Mapping ---
+const themeStyles = {
+  // Main container background and text color
+  container: {
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000000", // Black background
+    color: "#ffffff",
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  // Dark card style with green accents (inspired by featureCard)
+  card: {
+    borderRadius: "1rem", // Slightly more rounded than before
+    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.6))', // Dark, semi-transparent background
+    border: '1px solid rgba(16, 185, 129, 0.3)', // Subtle green border
+    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.1), 0 0 10px rgba(0,0,0,0.5)', // Subtle shadow
+    backdropFilter: 'blur(10px)',
+    p: 3, // Increased padding
+  },
+  // Input field styles (TextField and Select)
+  inputField: {
+    borderRadius: "0.5rem", // Slightly rounded
+    backgroundColor: "rgba(17, 24, 39, 0.7)", // Darker input background
+    border: "1px solid rgba(16, 185, 129, 0.2)", // Thin green border
+    boxShadow: "none",
+    fontSize: 14,
+    color: "white",
+    "&::placeholder": { fontSize: 12, color: "rgba(255,255,255,0.6)" },
+    "& fieldset": { border: "none" }, // Hide default MUI border
+    "&:hover fieldset": { border: "none" },
+    "&.Mui-focused fieldset": { border: "none" },
+  },
+  // Primary button style (green gradient)
+  primaryButton: {
+    mt: 2,
+    textTransform: "none",
+    borderRadius: "0.5rem",
+    fontSize: 14,
+    py: 1.2,
+    background: 'linear-gradient(to right, #34d399, #10b981)', // Green gradient
+    color: '#000000',
+    fontWeight: 600,
+    transition: 'all 0.3s',
+    "&:hover": {
+        background: 'linear-gradient(to right, #10b981, #059669)', // Darker hover
+        boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)',
+        transform: 'translateY(-2px)',
+    },
+    "&.Mui-disabled": { // Style for disabled state
+      background: 'rgba(52, 211, 153, 0.5)',
+      color: '#333333',
+    }
+  },
+  // Logo Icon Container
+  logoIconContainer: {
+    width: 48,
+    height: 48,
+    background: 'linear-gradient(to bottom right, #34d399, #10b981, #14b8a6)',
+    borderRadius: 2,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    mx: "auto",
+    mb: 1,
+    boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)', // Green glow
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  // Typography
+  titleText: {
+    fontWeight: 800,
+    fontSize: 28,
+    background: 'linear-gradient(to right, #f3f4f6, #ffffff, #d1d5db)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  },
+  subtitleText: {
+    color: '#9ca3af',
+    fontSize: 14,
+    fontWeight: 300,
+  },
+  linkText: {
+    color: "#34d399", // Green link color
+    textDecoration: "underline",
+    "&:hover": {
+      color: "#10b981",
+    }
+  },
+  // Floating Orbs for the landing page theme
+  floatingOrb1: {
+    position: 'absolute',
+    top: '5rem',
+    left: '25%',
+    width: '24rem',
+    height: '24rem',
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    borderRadius: '50%',
+    filter: 'blur(80px)',
+    pointerEvents: 'none',
+    animation: 'floatingGlow 4s ease-in-out infinite',
+    zIndex: 0,
+  },
+  floatingOrb2: {
+    position: 'absolute',
+    bottom: 0,
+    right: '25%',
+    width: '24rem',
+    height: '24rem',
+    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+    borderRadius: '50%',
+    filter: 'blur(80px)',
+    pointerEvents: 'none',
+    animation: 'floatingGlow 4s ease-in-out infinite',
+    animationDelay: '2s',
+    zIndex: 0,
+  }
+};
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -54,7 +180,7 @@ export default function LoginPage() {
         if (data.user.role === "admin") {
           navigate("/supportdashboard");
         } else if (data.user.role === "employee") {
-          navigate("/Employeedashboard");
+          navigate("/employeeDashboard");
         } else {
           navigate("/"); // fallback
         }
@@ -68,57 +194,45 @@ export default function LoginPage() {
   };
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        bgcolor: "#0b0b0b",
-        overflow: "hidden",
-        fontFamily: "'Inter','Roboto',sans-serif",
-        color: "white",
-      }}
-    >
-      <Box sx={{ width: "100%", maxWidth: 400 }}>
+    <Box sx={themeStyles.container}>
+      {/* CSS Keyframes (replicate from LandingPage) */}
+      <style>{`
+        @keyframes floatingGlow {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: translateY(-20px) scale(1.1);
+            opacity: 0.6;
+          }
+        }
+        .MuiFormLabel-root { color: #9ca3af !important; } /* Label color */
+        .MuiInputLabel-shrink { color: #34d399 !important; } /* Focused label color */
+      `}</style>
+
+      {/* Background Orbs */}
+      <Box sx={themeStyles.floatingOrb1} />
+      <Box sx={themeStyles.floatingOrb2} />
+
+      <Box sx={{ width: "100%", maxWidth: 400, position: 'relative', zIndex: 10 }}>
         {/* Logo */}
-        <Box sx={{ textAlign: "center", mb: 2 }}>
-          <Box
-            sx={{
-              width: 44,
-              height: 44,
-              bgcolor: "white",
-              borderRadius: 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mx: "auto",
-              mb: 1,
-            }}
-          >
-            <Bot size={22} color="black" />
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Box sx={themeStyles.logoIconContainer}>
+            <Bot size={24} color="black" strokeWidth={2.5} style={{ position: 'relative', zIndex: 10 }} />
           </Box>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          <Typography variant="h4" sx={themeStyles.titleText}>
             POWERGRID IT Support
           </Typography>
-          <Typography variant="body2" sx={{ color: "grey.400", fontSize: 12 }}>
+          <Typography variant="body2" sx={themeStyles.subtitleText}>
             Sign in to your account
           </Typography>
         </Box>
 
         {/* Login Card */}
-        <Card
-          sx={{
-            borderRadius: 2,
-            backgroundColor: "#0b0b0b",
-            border: "0.5px solid rgba(255,255,255,0.2)",
-            boxShadow: "none",
-            p: 1,
-          }}
-        >
+        <Card sx={themeStyles.card}>
           <CardHeader
-            sx={{ py: 1 }}
+            sx={{ pt: 1, pb: 2 }}
             title={
               <Typography
                 variant="subtitle1"
@@ -127,7 +241,7 @@ export default function LoginPage() {
                   justifyContent: "center",
                   color: "white",
                   fontWeight: 600,
-                  fontSize: 18,
+                  fontSize: 22,
                 }}
               >
                 Welcome Back
@@ -136,9 +250,9 @@ export default function LoginPage() {
             subheader={
               <Typography
                 variant="caption"
-                sx={{ display: "flex", justifyContent: "center", color: "grey.400", fontSize: 11 }}
+                sx={{ display: "flex", justifyContent: "center", color: "#6b7280", fontSize: 12 }}
               >
-                Enter your credentials to access the ticketing system
+                Enter your credentials to access the unified ticketing system
               </Typography>
             }
           />
@@ -146,40 +260,34 @@ export default function LoginPage() {
           <CardContent sx={{ py: 1 }}>
             <form onSubmit={handleSubmit}>
               {/* Email */}
-              <Box sx={{ mb: 1 }}>
+              <Box sx={{ mb: 2 }}>
                 <TextField
+                  label="Email Address"
                   placeholder="employee@powergrid.com"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   fullWidth
                   margin="dense"
-                  InputProps={{
-                    sx: {
-                      borderRadius: 2,
-                      backgroundColor: "#0b0b0b",
-                      border: "0.5px solid rgba(255,255,255,0.2)",
-                      boxShadow: "none",
-                      fontSize: 13,
-                      color: "white",
-                      "&::placeholder": { fontSize: 11, color: "rgba(255,255,255,0.6)" },
-                    },
-                  }}
+                  InputProps={{ sx: themeStyles.inputField }}
                 />
               </Box>
 
               {/* Role Dropdown */}
-              <Box sx={{ mb: 1 }}>
+              <Box sx={{ mb: 2 }}>
                 <FormControl fullWidth>
-                  <InputLabel sx={{ color: "grey.400", fontSize: 12 }}>Role</InputLabel>
+                  <InputLabel id="role-select-label" sx={{ color: '#9ca3af' }}>Role</InputLabel>
                   <Select
+                    labelId="role-select-label"
+                    id="role-select"
                     value={role}
+                    label="Role"
                     onChange={(e) => setRole(e.target.value)}
+                    MenuProps={{ PaperProps: { sx: { backgroundColor: '#111827', color: 'white' } } }}
                     sx={{
-                      borderRadius: 2,
-                      backgroundColor: "#0b0b0b",
-                      color: "white",
-                      "& .MuiSelect-icon": { color: "white" },
+                      ...themeStyles.inputField,
+                      "& .MuiSelect-select": { py: '12.5px' },
+                      "& .MuiSelect-icon": { color: "#34d399" }, // Green icon
                     }}
                   >
                     <MenuItem value="admin">Admin</MenuItem>
@@ -191,23 +299,14 @@ export default function LoginPage() {
               {/* Password */}
               <Box sx={{ mb: 1 }}>
                 <TextField
+                  label="Password"
                   placeholder="Enter your password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   fullWidth
                   margin="dense"
-                  InputProps={{
-                    sx: {
-                      borderRadius: 2,
-                      backgroundColor: "#0b0b0b",
-                      border: "0.5px solid rgba(255,255,255,0.2)",
-                      boxShadow: "none",
-                      fontSize: 13,
-                      color: "white",
-                      "&::placeholder": { fontSize: 11, color: "rgba(255,255,255,0.6)" },
-                    },
-                  }}
+                  InputProps={{ sx: themeStyles.inputField }}
                 />
               </Box>
 
@@ -217,26 +316,23 @@ export default function LoginPage() {
                 variant="contained"
                 disabled={isLoading}
                 fullWidth
-                sx={{
-                  mt: 1,
-                  textTransform: "none",
-                  borderRadius: 1.5,
-                  fontSize: 13,
-                  py: 0.7,
-                  bgcolor: "white",
-                  color: "black",
-                  "&:hover": { bgcolor: "grey.200", color: "black" },
-                }}
+                sx={themeStyles.primaryButton}
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {isLoading ? (
+                  <CircularProgress size={20} color="inherit" sx={{ color: 'black' }} />
+                ) : (
+                  <>
+                    <LogIn size={18} style={{ marginRight: 8 }} /> Sign In
+                  </>
+                )}
               </Button>
             </form>
           </CardContent>
 
           <CardActions sx={{ justifyContent: "center", mb: 1, py: 0.5 }}>
-            <Typography variant="caption" sx={{ color: "grey.400", fontSize: 11 }}>
+            <Typography variant="caption" sx={{ color: "#6b7280", fontSize: 12 }}>
               Don't have an account?{" "}
-              <a href="/signup" style={{ color: "white", textDecoration: "underline" }}>
+              <a href="/signup" style={themeStyles.linkText}>
                 Sign up
               </a>
             </Typography>
@@ -245,9 +341,9 @@ export default function LoginPage() {
 
         <Typography
           variant="caption"
-          sx={{ display: "block", textAlign: "center", color: "grey.500", mt: 2, fontSize: 11 }}
+          sx={{ display: "block", textAlign: "center", color: "#4b5563", mt: 4, fontSize: 11 }}
         >
-          For IT support issues, contact helpdesk@powergrid.com
+          For IT support issues, contact <a href="mailto:helpdesk@powergrid.com" style={{ color: "#34d399" }}>helpdesk@powergrid.com</a>
         </Typography>
       </Box>
     </Box>

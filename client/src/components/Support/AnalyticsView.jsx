@@ -5,13 +5,13 @@ import { NavLink } from 'react-router-dom';
 import {
   Box, Card, CardContent, CardHeader, Grid, Typography, Tabs, Tab, List,
   ListItem, ListItemButton, ListItemIcon, ListItemText, LinearProgress, Avatar,
-  createTheme, ThemeProvider, CssBaseline, Drawer, IconButton,
+  createTheme, ThemeProvider, CssBaseline, Drawer, IconButton, Divider, // Added Divider
 } from '@mui/material';
 
 // Lucide React Icons
 import {
   Ticket, Users, Bot, Sparkles, BookOpen, Bell, TrendingUp, Clock,
-  CheckCircle2, Settings, Menu as MenuIcon,
+  CheckCircle2, Settings, Menu as MenuIcon, LogOut, // Added LogOut
 } from 'lucide-react';
 
 // MUI X Charts
@@ -116,33 +116,48 @@ function AnalyticsView() {
   ];
 
   const drawerContent = (
-    <div>
-      <Box sx={{ display: 'flex', alignItems: 'center', height: 64, borderBottom: 1, borderColor: 'divider', px: 2, bgcolor: '#111' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Avatar sx={{ background: 'linear-gradient(to right, #34d399, #10b981)', width: 32, height: 32, bgcolor: 'transparent' }}>
-            <Ticket size={18} color="#fff" />
-          </Avatar>
-          <Typography variant="h6" component="span" sx={{ fontWeight: 'bold', color: '#fff' }}>
-            POWERGRID IT
-          </Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', height: 64, borderBottom: 1, borderColor: 'divider', px: 2, bgcolor: '#111' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Avatar sx={{ background: 'linear-gradient(to right, #34d399, #10b981)', width: 32, height: 32, bgcolor: 'transparent' }}>
+              <Ticket size={18} color="#fff" />
+            </Avatar>
+            <Typography variant="h6" component="span" sx={{ fontWeight: 'bold', color: '#fff' }}>
+              POWERGRID IT
+            </Typography>
+          </Box>
         </Box>
+        <List sx={{ p: 1 }}>
+          {navItems.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton component={NavLink} to={item.href} sx={{ borderRadius: 1, '&:hover': { background: 'linear-gradient(to right, #34d39922, #10b98122)' } }}>
+                  <ListItemIcon sx={{ color: '#fff', minWidth: 36 }}>
+                    <IconComponent size={18} />
+                  </ListItemIcon>
+                  <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }} primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
       </Box>
-      <List sx={{ p: 1 }}>
-        {navItems.map((item) => {
-          const IconComponent = item.icon;
-          return (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton component={NavLink} to={item.href} sx={{ borderRadius: 1, '&:hover': { background: 'linear-gradient(to right, #34d39922, #10b98122)' } }}>
-                <ListItemIcon sx={{ color: '#fff', minWidth: 36 }}>
-                  <IconComponent size={18} />
-                </ListItemIcon>
-                <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }} primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
-    </div>
+      <Box sx={{ marginTop: 'auto' }}>
+        <Divider />
+        <List sx={{ p: 1 }}>
+          <ListItem disablePadding>
+            <ListItemButton component={NavLink} to="/" sx={{ borderRadius: 1, '&:hover': { background: 'linear-gradient(to right, #34d39922, #10b98122)' } }}>
+              <ListItemIcon sx={{ color: '#fff', minWidth: 36 }}>
+                <LogOut size={18} />
+              </ListItemIcon>
+              <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }} primary="Logout" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Box>
+    </Box>
   );
 
   return (
@@ -269,15 +284,15 @@ function AnalyticsView() {
               <Card>
                 <CardHeader title="Tickets by Source" subheader="Ticket ingestion from different platforms" />
                 <CardContent>
-                   <Box sx={{ height: 320 }}>
-                    <BarChart
-                        dataset={sourceData}
-                        yAxis={[{ scaleType: 'band', dataKey: 'source' }]}
-                        series={[{ dataKey: 'count', label: 'Tickets', color: '#34d399' }]}
-                        layout="horizontal"
-                        grid={{ vertical: true, horizontal: false }}
+                  <Box sx={{ height: 320 }}>
+                   <BarChart
+                      dataset={sourceData}
+                      yAxis={[{ scaleType: 'band', dataKey: 'source' }]}
+                      series={[{ dataKey: 'count', label: 'Tickets', color: '#34d399' }]}
+                      layout="horizontal"
+                      grid={{ vertical: true, horizontal: false }}
                     />
-                   </Box>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>

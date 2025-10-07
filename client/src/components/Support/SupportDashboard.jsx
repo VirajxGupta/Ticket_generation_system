@@ -12,9 +12,11 @@ import {
   Avatar,
   Drawer,
   List,
+  ListItem, // Added
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Divider, // Added
 } from "@mui/material";
 import {
   Search,
@@ -28,6 +30,7 @@ import {
   Settings,
   Menu,
   X,
+  LogOut, // Added
 } from "lucide-react";
 import StatsCards from "./StatsCards.jsx";
 import TicketList from "./TicketList.jsx";
@@ -53,63 +56,94 @@ export default function SupportDashboard() {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const SidebarContent = (
-    <Box sx={{ width: 256, bgcolor: "#1a1a1a", height: "100%" }}>
-      <Box
-        sx={{
-          height: 64,
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
-          px: 3,
-          display: "flex",
-          alignItems: "center",
-          bgcolor: "#111",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Avatar
-            sx={{
-              bgcolor: "transparent",
-              background: "linear-gradient(to right, #34d399, #10b981)",
-              width: 32,
-              height: 32,
-            }}
-          >
-            <Ticket size={18} color="#fff" />
-          </Avatar>
-          <Typography variant="subtitle1" fontWeight="600" color="#fff">
-            POWERGRID IT
-          </Typography>
+    <Box sx={{ width: 256, bgcolor: "#1a1a1a", height: "100%", display: 'flex', flexDirection: 'column' }}>
+      <Box>
+        <Box
+          sx={{
+            height: 64,
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            px: 3,
+            display: "flex",
+            alignItems: "center",
+            bgcolor: "#111",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Avatar
+              sx={{
+                bgcolor: "transparent",
+                background: "linear-gradient(to right, #34d399, #10b981)",
+                width: 32,
+                height: 32,
+              }}
+            >
+              <Ticket size={18} color="#fff" />
+            </Avatar>
+            <Typography variant="subtitle1" fontWeight="600" color="#fff">
+              POWERGRID IT
+            </Typography>
+          </Box>
         </Box>
+        <List sx={{ p: 1 }}>
+          {sidebarItems.map((item) => (
+            <ListItem key={item.label} disablePadding>
+              <ListItemButton
+                component={Link}
+                to={item.href}
+                sx={{
+                  "&:hover": {
+                    background: "linear-gradient(to right, #34d39933, #10b98133)",
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+                  <item.icon size={18} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="body2" color="#fff">
+                      {item.label}
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
       </Box>
-      <List sx={{ p: 0 }}>
-        {sidebarItems.map((item) => (
-          <ListItemButton
-            key={item.label}
-            component={Link}
-            to={item.href}
-            sx={{
-              "&:hover": {
-                background: "linear-gradient(to right, #34d39933, #10b98133)",
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <item.icon size={18} />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Typography variant="body2" color="#fff">
-                  {item.label}
-                </Typography>
-              }
-            />
-          </ListItemButton>
-        ))}
-      </List>
+
+      <Box sx={{ marginTop: 'auto' }}>
+        <Divider />
+        <List sx={{ p: 1 }}>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/"
+              sx={{
+                "&:hover": {
+                  background: "linear-gradient(to right, #34d39933, #10b98133)",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+                <LogOut size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="#fff">
+                    Logout
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Box>
     </Box>
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#0a0a0a", color: "#e5e5e5" }}>
+    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: "#0a0a0a", color: "#e5e5e5" }}>
       {/* Sidebar for large screens */}
       <Box
         sx={{
@@ -123,7 +157,7 @@ export default function SupportDashboard() {
       </Box>
 
       {/* Drawer for small screens */}
-      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar}>
+      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: "#1a1a1a" } }}>
         {SidebarContent}
       </Drawer>
 

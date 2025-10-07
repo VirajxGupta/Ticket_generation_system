@@ -12,11 +12,13 @@ import {
   Typography,
   Drawer,
   List,
+  ListItem, // Added
   ListItemButton,
   ListItemIcon,
   ListItemText,
   IconButton,
   Grid,
+  Divider, // Added
 } from "@mui/material";
 import {
   Ticket,
@@ -29,6 +31,7 @@ import {
   Settings,
   Menu,
   X,
+  LogOut, // Added
 } from "lucide-react";
 import SendIcon from "@mui/icons-material/Send";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
@@ -94,65 +97,93 @@ export default function EmployeeChatbot() {
 
   const SidebarContent = (
     <Box sx={{ width: 256, bgcolor: "#1a1a1a", height: "100%", display: "flex", flexDirection: "column" }}>
-      <Box
-        sx={{
-          height: 64,
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
-          px: 3,
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-          bgcolor: "#1a1a1a",
-        }}
-      >
-        <Avatar
+      <Box>
+        <Box
           sx={{
-            bgcolor: "transparent",
-            background: "linear-gradient(to right, #34d399, #10b981)",
-            width: 32,
-            height: 32,
+            height: 64,
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            px: 3,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            bgcolor: "#111",
           }}
         >
-          <Ticket size={16} color="#fff" />
-        </Avatar>
-        <Typography variant="subtitle1" fontWeight={600} color="#fff">
-          POWERGRID IT
-        </Typography>
-      </Box>
-
-      <List sx={{ p: 0 }}>
-        {sidebarItems.map((item) => (
-          <ListItemButton
-            key={item.href}
-            component={Link}
-            to={item.href}
+          <Avatar
             sx={{
-              color: "#fff",
-              "&:hover": {
-                background: "linear-gradient(to right, #34d39933, #10b98133)",
-              },
+              bgcolor: "transparent",
+              background: "linear-gradient(to right, #34d399, #10b981)",
+              width: 32,
+              height: 32,
             }}
           >
-            <ListItemIcon sx={{ color: "#fff" }}>
-              <item.icon size={18} />
-            </ListItemIcon>
-            <ListItemText
-              primary={<Typography variant="body2">{item.label}</Typography>}
-            />
-          </ListItemButton>
-        ))}
-      </List>
+            <Ticket size={16} color="#fff" />
+          </Avatar>
+          <Typography variant="subtitle1" fontWeight={600} color="#fff">
+            POWERGRID IT
+          </Typography>
+        </Box>
+
+        <List sx={{ p: 1 }}>
+          {sidebarItems.map((item) => (
+            <ListItem key={item.href} disablePadding>
+              <ListItemButton
+                component={Link}
+                to={item.href}
+                sx={{
+                  color: "#fff",
+                  "&:hover": {
+                    background: "linear-gradient(to right, #34d39933, #10b98133)",
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+                  <item.icon size={18} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={<Typography variant="body2">{item.label}</Typography>}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+
+      <Box sx={{ marginTop: 'auto' }}>
+        <Divider />
+        <List sx={{ p: 1 }}>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/"
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  background: "linear-gradient(to right, #34d39933, #10b98133)",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+                <LogOut size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary={<Typography variant="body2">Logout</Typography>}
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Box>
     </Box>
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#0a0a0a", color: "#e5e5e5" }}>
+    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: "#0a0a0a", color: "#e5e5e5" }}>
       {/* Sidebar for large screens */}
       <Box sx={{ display: { xs: "none", md: "flex" }, width: 256, flexDirection: "column", borderRight: "1px solid rgba(255,255,255,0.1)" }}>
         {SidebarContent}
       </Box>
       {/* Drawer for mobile */}
-      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar}>
+      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: "#1a1a1a" } }}>
         {SidebarContent}
       </Drawer>
 
@@ -169,9 +200,7 @@ export default function EmployeeChatbot() {
             alignItems: { xs: "flex-start", sm: "center" },
             justifyContent: "space-between",
             py: 1,
-            position: "sticky",
-            top: 0,
-            zIndex: 10,
+            flexShrink: 0, // Prevent header from shrinking
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%" }}>
@@ -208,7 +237,11 @@ export default function EmployeeChatbot() {
           }}
         >
           {messages.length === 0 && (
-            <Box sx={{ color: "#9ca3af" }}>Start a conversation using the input below or quick actions!</Box>
+            <Box sx={{ textAlign: 'center', color: "#9ca3af", my: 4 }}>
+              <SmartToyIcon sx={{ fontSize: 48, color: '#34d399' }} />
+              <Typography variant="h6" sx={{ mt: 1 }}>How can I help you today?</Typography>
+              <Typography variant="body2">Start a conversation or use a quick action below.</Typography>
+            </Box>
           )}
 
           {messages.map((msg) => {
@@ -235,7 +268,7 @@ export default function EmployeeChatbot() {
                     py: 1,
                     borderRadius: 2,
                     bgcolor: isUser ? "#10b981" : "#1a1a1a",
-                    color: isUser ? "#000" : "#fff",
+                    color: "#fff",
                     whiteSpace: "pre-wrap",
                   }}
                 >
@@ -250,16 +283,18 @@ export default function EmployeeChatbot() {
               </Box>
             );
           })}
+        </Box>
 
-          {/* Quick Actions */}
-          <Box sx={{ mt: 2 }}>
-            <Grid container spacing={1}>
+        {/* Input area */}
+        <Box sx={{ borderTop: "1px solid rgba(255,255,255,0.1)", p: 2, flexShrink: 0, bgcolor: '#111' }}>
+          {messages.length === 0 && (
+            <Grid container spacing={1} sx={{ mb: 2 }}>
               {quickActions.map((action) => (
-                <Grid item xs={6} key={action.label}>
+                <Grid item xs={12} sm={6} md={3} key={action.label}>
                   <Button
                     fullWidth
                     variant="outlined"
-                    sx={{ color: "#10b981", borderColor: "#10b981", textTransform: "none" }}
+                    sx={{ color: "#9ca3af", borderColor: "rgba(255,255,255,0.2)", textTransform: "none", '&:hover': {borderColor: '#34d399', bgcolor: 'rgba(52, 211, 153, 0.1)'} }}
                     onClick={() => handleQuickAction(action.query)}
                   >
                     {action.label}
@@ -267,11 +302,7 @@ export default function EmployeeChatbot() {
                 </Grid>
               ))}
             </Grid>
-          </Box>
-        </Box>
-
-        {/* Input area */}
-        <Box sx={{ borderTop: "1px solid rgba(255,255,255,0.1)", p: 2 }}>
+          )}
           <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", gap: 1 }}>
             <TextField
               value={input}
@@ -280,11 +311,16 @@ export default function EmployeeChatbot() {
               variant="outlined"
               size="small"
               fullWidth
-              InputProps={{
-                sx: { bgcolor: "#000", color: "#fff" },
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  bgcolor: "#000",
+                  color: "#fff",
+                  '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
+                  '&:hover fieldset': { borderColor: '#34d399' },
+                }
               }}
             />
-            <IconButton type="submit" color="primary">
+            <IconButton type="submit" sx={{ bgcolor: '#34d399', color: 'black', '&:hover': { bgcolor: '#10b981' } }}>
               <SendIcon />
             </IconButton>
           </Box>
