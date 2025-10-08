@@ -75,3 +75,12 @@ export const getEmployees = async () => {
     throw new Error("Failed to fetch employees");
   }
 };
+
+export const getUserById = async (id) => {
+  const doc = await db.collection("users").doc(id).get();
+  return doc.exists ? { id: doc.id, ...doc.data() } : null;
+};
+
+export const updateUserPassword = async (id, hashedPassword) => {
+  await db.collection("users").doc(id).update({ password: hashedPassword });
+};

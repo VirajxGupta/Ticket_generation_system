@@ -5,8 +5,10 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { db } from "./config/firebaseAdmin.js";
 import { authenticate } from "./middlewares/authMiddleware.js";
-import { register, login, logout } from "./controllers/userController.js";
+import { register, login, logout, changePassword } from "./controllers/userController.js";
 import cors from "cors";
+import profileRoutes from "./routes/ProfileRoutes.js";
+import ticketRoutes from "./routes/ticketRoutes.js";
 
 dotenv.config(); // JWT_SECRET aur PORT ke liye
 
@@ -26,10 +28,16 @@ app.get("/", (req, res) => {
   res.send("Hello from Node.js backend! 🚀");
 });
 
+//---------------------------------------------
+
+app.use("/profile", profileRoutes);
+app.use("/api/tickets", ticketRoutes)
+
 // ---------------- Auth Routes ----------------
 app.post("/api/register", register);
 app.post("/api/login", login);
 app.post("/api/logout", logout); // POST logout
+app.post("/api/change-password", changePassword);
 
 // ---------------- Add User ----------------
 app.post("/api/addUser", async (req, res) => {

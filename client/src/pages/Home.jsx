@@ -73,11 +73,11 @@ export default function LandingPage() {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     },
     backgroundGradient: {
-      position: 'absolute',
-      inset: 0,
-      background: 'linear-gradient(to bottom, #030712, #000000, #030712)',
-      pointerEvents: 'none',
-    },
+  position: 'absolute',
+  inset: 0,
+  background: 'radial-gradient(ellipse at top, rgba(6, 78, 59, 0.3) 0%, rgba(0, 0, 0, 1) 50%), radial-gradient(ellipse at bottom, rgba(4, 47, 46, 0.2) 0%, rgba(0, 0, 0, 1) 50%), linear-gradient(to bottom, #000000, #0a0f0a, #000000)',
+  pointerEvents: 'none',
+},
     floatingOrb1: {
       position: 'absolute',
       top: '5rem',
@@ -132,14 +132,18 @@ export default function LandingPage() {
       pointerEvents: 'none',
       animation: 'gridPulse 3s ease-in-out infinite',
     },
+    
     header: {
-      position: 'sticky',
+      position: 'fixed',
       top: 0,
+      left: 0,
+      right: 0,
       zIndex: 50,
-      backdropFilter: 'blur(20px)',
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      backdropFilter: 'blur(8px)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
       borderBottom: '1px solid rgba(16, 185, 129, 0.1)',
-      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)',
+      boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)',
+      transition: 'all 0.3s ease',
     },
     headerContainer: {
       maxWidth: '1280px',
@@ -210,7 +214,7 @@ export default function LandingPage() {
     heroSection: {
       position: 'relative',
       zIndex: 10,
-      paddingTop: '5rem',
+      paddingTop: '8rem',
       paddingBottom: '8rem',
       padding: '5rem 1.5rem 8rem',
     },

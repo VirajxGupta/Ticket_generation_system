@@ -2,9 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {
     Box, Typography, IconButton, Avatar, Divider, useMediaQuery, useTheme, Paper,
     Container, Grid, Card, CardContent, CardHeader, Button, List, ListItem, ListItemButton,
-    ListItemIcon, ListItemText, Fab, TextField, Drawer, Chip, InputAdornment, Link as MuiLink
+    ListItemIcon, ListItemText, Fab, TextField, Drawer, Chip, InputAdornment, Link as MuiLink,
+    CircularProgress // Logic ke liye import kiya gaya
 } from '@mui/material';
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-hot-toast"; // Logic ke liye import kiya gaya
 
 // --- Standard Material UI Icons ---
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -16,10 +18,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-// --- FIX: Corrected the typo in the import path for the icons below ---
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // <-- This line was fixed
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import SendIcon from '@mui/icons-material/Send';
 import MinimizeIcon from '@mui/icons-material/Minimize';
@@ -29,12 +30,12 @@ import InfoOutlined from "@mui/icons-material/InfoOutlined";
 
 // --- Configuration & THEME ---
 const DRAWER_WIDTH = 250;
-const MAIN_BG_COLOR = '#000000'; 
-const SIDEBAR_COLOR = '#030712'; 
-const CARD_BG_COLOR = 'rgba(17, 24, 39, 0.8)'; 
-const ACCENT_COLOR = '#34d399'; 
-const ACCENT_HOVER_COLOR = '#10b981'; 
-const TEXT_MUTED = '#9ca3af'; 
+const MAIN_BG_COLOR = '#000000';
+const SIDEBAR_COLOR = '#030712';
+const CARD_BG_COLOR = 'rgba(17, 24, 39, 0.8)';
+const ACCENT_COLOR = '#34d399';
+const ACCENT_HOVER_COLOR = '#10b981';
+const TEXT_MUTED = '#9ca3af';
 const DARK_CARD_COLOR = 'rgba(3, 7, 18, 0.6)';
 const CARD_HOVER_BG = 'rgba(52, 211, 153, 0.05)';
 const MAX_CONTENT_WIDTH = 1400;
@@ -42,17 +43,9 @@ const MAX_CONTENT_WIDTH = 1400;
 const CARD_GLOW_SHADOW = `0 15px 30px 0 rgba(16, 185, 129, 0.2)`;
 const BUTTON_GLOW_SHADOW = `0 0 20px rgba(16, 185, 129, 0.4)`;
 
-// --- Mock Data ---
-const mockUser = {
-    name: "Test User",
-    email: "test@powergrid.com",
-    role: "user",
-    isLoggedIn: true,
-};
-
-// 🌟 FIX: Updated Dashboard href to /employeeDashboard
+// --- Mock Data (for UI) ---
 const navigation = [
-    { name: "Dashboard", href: "/employeeDashboard", icon: DashboardIcon }, 
+    { name: "Dashboard", href: "/employeeDashboard", icon: DashboardIcon },
     { name: "My Tickets", href: "/employeeDashboardTicket", icon: AssignmentIcon },
     { name: "AI Assistant", href: "/employeeDashboardAIAssistant", icon: ChatIcon },
     { name: "Knowledge Base", href: "/employeeDashboardKnowledge", icon: BookIcon },
@@ -92,20 +85,7 @@ const getStatusStyles = (status) => {
     }
 };
 
-const getTimeAgo = (date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-    if (days > 0) return `${days} day${days > 1 ? "s" : ""} ago`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    return "Just now";
-};
-
-
-// ----------------------------------------------------------------------
-// --- CONTENT COMPONENTS (Simplified Placeholders) ---
-// ----------------------------------------------------------------------
+// --- CONTENT COMPONENTS ---
 
 function PlaceholderPage({ title, path }) {
     return (
@@ -118,9 +98,7 @@ function PlaceholderPage({ title, path }) {
     );
 }
 
-// 🌟 FIX: EmployeeTicketPage Content (Simplified for integration)
 function EmployeeTicketPage() {
-    // This uses the look/feel from your provided ticket page code snippet, but keeps the implementation simple.
     const [searchQuery, setSearchQuery] = useState("");
     const filteredTickets = useMemo(() => {
         const lowerQuery = searchQuery.toLowerCase();
@@ -133,64 +111,60 @@ function EmployeeTicketPage() {
     return (
         <Box sx={{ maxWidth: MAX_CONTENT_WIDTH, mx: 'auto', p: 0, pt: 0 }}>
              <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 4 }}>
-                <Grid item>
-                    <Typography variant="h4" component="h1" fontWeight="bold" color="white" gutterBottom>My Tickets</Typography>
-                    <Typography variant="body1" color={TEXT_MUTED}>View and manage your support requests ({filteredTickets.length})</Typography>
-                </Grid>
-                <Grid item>
-                    <Button
-                        variant="contained" startIcon={<Add />} disableElevation
-                        sx={{ background: ACCENT_COLOR, color: 'black', fontWeight: 'bold', borderRadius: 2, py: 1.5 }}
-                    >Create New Ticket</Button>
-                </Grid>
-            </Grid>
+                  <Grid item>
+                      <Typography variant="h4" component="h1" fontWeight="bold" color="white" gutterBottom>My Tickets</Typography>
+                      <Typography variant="body1" color={TEXT_MUTED}>View and manage your support requests ({filteredTickets.length})</Typography>
+                  </Grid>
+                  <Grid item>
+                      <Button
+                          variant="contained" startIcon={<Add />} disableElevation
+                          sx={{ background: ACCENT_COLOR, color: 'black', fontWeight: 'bold', borderRadius: 2, py: 1.5 }}
+                      >Create New Ticket</Button>
+                  </Grid>
+              </Grid>
 
-            <Card sx={{ bgcolor: DARK_CARD_COLOR, border: "1px solid rgba(52, 211, 153, 0.15)", borderRadius: 3, mb: 4, p: 1.5 }}>
-                <CardContent sx={{ p: 0 }}>
-                    <TextField
-                        fullWidth placeholder="Search by title or ticket number..." variant="outlined"
-                        value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                color: "white", bgcolor: "rgba(0, 0, 0, 0.7)", borderRadius: 2,
-                                "& fieldset": { borderColor: "rgba(52, 211, 153, 0.2)" },
-                                "&:hover fieldset": { borderColor: ACCENT_COLOR },
-                                "&.Mui-focused fieldset": { borderColor: ACCENT_COLOR },
-                            },
-                        }}
-                        InputProps={{
-                            startAdornment: (<InputAdornment position="start"><Search sx={{ color: ACCENT_COLOR }} /></InputAdornment>),
-                            style: { height: 56, padding: 0 } 
-                        }}
-                    />
-                </CardContent>
-            </Card>
+              <Card sx={{ bgcolor: DARK_CARD_COLOR, border: "1px solid rgba(52, 211, 153, 0.15)", borderRadius: 3, mb: 4, p: 1.5 }}>
+                  <CardContent sx={{ p: 0 }}>
+                      <TextField
+                          fullWidth placeholder="Search by title or ticket number..." variant="outlined"
+                          value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                          sx={{
+                              "& .MuiOutlinedInput-root": {
+                                  color: "white", bgcolor: "rgba(0, 0, 0, 0.7)", borderRadius: 2,
+                                  "& fieldset": { borderColor: "rgba(52, 211, 153, 0.2)" },
+                                  "&:hover fieldset": { borderColor: ACCENT_COLOR },
+                                  "&.Mui-focused fieldset": { borderColor: ACCENT_COLOR },
+                              },
+                          }}
+                          InputProps={{
+                              startAdornment: (<InputAdornment position="start"><Search sx={{ color: ACCENT_COLOR }} /></InputAdornment>),
+                              style: { height: 56, padding: 0 }
+                          }}
+                      />
+                  </CardContent>
+              </Card>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3, pb: 4 }}>
-                {filteredTickets.length > 0 ? (
-                    filteredTickets.map((ticket, index) => (
-                        <Card key={ticket.id} sx={{ bgcolor: DARK_CARD_COLOR, color: "white", border: "1px solid rgba(52, 211, 153, 0.15)", borderRadius: 3, cursor: "pointer", '&:hover': { transform: "translateY(-4px)", boxShadow: CARD_GLOW_SHADOW }}}>
-                            <CardContent>
-                                <Typography variant="h6" color="white">{ticket.title}</Typography>
-                                <Typography variant="caption" color={TEXT_MUTED}>#{ticket.ticketNumber} | Priority: <Chip label={ticket.priority} size="small" sx={getPriorityStyles(ticket.priority)} /></Typography>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-                                    <Typography variant="body2" color={TEXT_MUTED}><AccessTimeIcon sx={{ fontSize: 14, mr: 0.5 }} />{ticket.created}</Typography>
-                                    <Chip label={ticket.status} size="small" sx={getStatusStyles(ticket.status)} />
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    ))
-                ) : (
-                    <Paper sx={{ p: 4, textAlign: "center", bgcolor: CARD_BG_COLOR }}><Typography color={TEXT_MUTED}>No tickets found.</Typography></Paper>
-                )}
-            </Box>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 3, pb: 4 }}>
+                  {filteredTickets.length > 0 ? (
+                      filteredTickets.map((ticket, index) => (
+                          <Card key={ticket.id} sx={{ bgcolor: DARK_CARD_COLOR, color: "white", border: "1px solid rgba(52, 211, 153, 0.15)", borderRadius: 3, cursor: "pointer", '&:hover': { transform: "translateY(-4px)", boxShadow: CARD_GLOW_SHADOW }}}>
+                              <CardContent>
+                                  <Typography variant="h6" color="white">{ticket.title}</Typography>
+                                  <Typography variant="caption" color={TEXT_MUTED}>#{ticket.ticketNumber} | Priority: <Chip label={ticket.priority} size="small" sx={getPriorityStyles(ticket.priority)} /></Typography>
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                                      <Typography variant="body2" color={TEXT_MUTED}><AccessTimeIcon sx={{ fontSize: 14, mr: 0.5 }} />{ticket.created}</Typography>
+                                      <Chip label={ticket.status} size="small" sx={getStatusStyles(ticket.status)} />
+                                  </Box>
+                              </CardContent>
+                          </Card>
+                      ))
+                  ) : (
+                      <Paper sx={{ p: 4, textAlign: "center", bgcolor: CARD_BG_COLOR }}><Typography color={TEXT_MUTED}>No tickets found.</Typography></Paper>
+                  )}
+              </Box>
         </Box>
     );
 }
-
-// ----------------------------------------------------------------------
-// --- DASHBOARD LAYOUT & NAVIGATION COMPONENTS ---
-// ----------------------------------------------------------------------
 
 function AIChatWidget() {
     // ... (AIChatWidget implementation as provided) ...
@@ -265,7 +239,7 @@ function AIChatWidget() {
                                 <Paper
                                     sx={{
                                         p: 1.5, borderRadius: 2, maxWidth: '80%',
-                                        bgcolor: msg.role === "assistant" ? 'rgba(52, 58, 64, 0.8)' : ACCENT_COLOR, 
+                                        bgcolor: msg.role === "assistant" ? 'rgba(52, 58, 64, 0.8)' : ACCENT_COLOR,
                                         color: msg.role === "assistant" ? 'white' : 'black',
                                         boxShadow: 0, wordBreak: 'break-word',
                                     }}
@@ -309,16 +283,23 @@ function AIChatWidget() {
     );
 }
 
-function SidebarContent({ currentPath, navigate }) {
+// --- DASHBOARD LAYOUT & NAVIGATION COMPONENTS ---
+
+function SidebarContent({ navigate }) {
     const location = useLocation();
-    
-    // 🌟 FIX: Use startsWith for generic matching, and exact match for dashboard home.
+
     const isActiveLink = (href) => {
         if (href === '/employeeDashboard') {
-            return location.pathname === href; // Exact match for the dashboard page itself
+            return location.pathname === href;
         }
-        return location.pathname.startsWith(href); // Match tickets, ai, knowledge, etc.
+        return location.pathname.startsWith(href);
     }
+
+    const handleLogout = () => {
+        toast.success("Logged out successfully.");
+        localStorage.removeItem("user");
+        navigate("/");
+    };
 
     return (
         <Box
@@ -327,7 +308,6 @@ function SidebarContent({ currentPath, navigate }) {
                 height: '100%', display: 'flex', flexDirection: 'column', pt: 2,
             }}
         >
-            {/* Logo */}
             <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
                 <SmartToyIcon sx={{ color: ACCENT_COLOR, fontSize: 30 }} />
                 <Typography variant="h6" fontWeight="bold">POWERGRID IT</Typography>
@@ -335,7 +315,6 @@ function SidebarContent({ currentPath, navigate }) {
 
             <Divider sx={{ mb: 2, bgcolor: '#333' }} />
 
-            {/* Navigation */}
             <List sx={{ px: 1, flexGrow: 1 }}>
                 {navigation.map((item) => {
                     const Icon = item.icon;
@@ -344,7 +323,7 @@ function SidebarContent({ currentPath, navigate }) {
                     return (
                         <ListItem key={item.href} disablePadding sx={{ mb: 0.5 }}>
                             <ListItemButton
-                                onClick={() => navigate(item.href)} 
+                                onClick={() => navigate(item.href)}
                                 sx={{
                                     borderRadius: 2,
                                     bgcolor: isActive ? 'rgba(52, 211, 153, 0.1)' : 'transparent',
@@ -376,7 +355,6 @@ function SidebarContent({ currentPath, navigate }) {
 
             <Divider sx={{ mt: 'auto', mb: 1, bgcolor: '#333' }} />
 
-            {/* Settings & Logout Links */}
             <List sx={{ px: 1, pb: 2 }}>
                 <ListItem disablePadding sx={{ mb: 0.5 }}>
                     <ListItemButton
@@ -389,7 +367,7 @@ function SidebarContent({ currentPath, navigate }) {
                 </ListItem>
                 <ListItem disablePadding sx={{ mb: 0.5 }}>
                     <ListItemButton
-                        onClick={() => navigate("/")}
+                        onClick={handleLogout}
                         sx={{ borderRadius: 2, py: 1.5, '&:hover': { bgcolor: '#1a1a1a', color: '#ef4444' }, color: TEXT_MUTED }}
                     >
                         <ListItemIcon sx={{ minWidth: 40, color: 'inherit' }}><LogoutIcon /></ListItemIcon>
@@ -404,54 +382,33 @@ function SidebarContent({ currentPath, navigate }) {
 function Sidebar({ navigate, isDesktop, isMobileMenuOpen, handleDrawerToggle }) {
     if (isDesktop) {
         return (
-            <Box
-                sx={{
-                    width: DRAWER_WIDTH, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0,
-                    borderRight: '1px solid rgba(52, 211, 153, 0.2)', zIndex: 1000,
-                }}
-            >
+            <Box sx={{ width: DRAWER_WIDTH, flexShrink: 0, position: 'fixed', top: 0, bottom: 0, left: 0, borderRight: '1px solid rgba(52, 211, 153, 0.2)', zIndex: 1000 }}>
                 <SidebarContent navigate={navigate} />
             </Box>
         );
     }
-
     return (
-        <Drawer
-            variant="temporary" open={isMobileMenuOpen} onClose={handleDrawerToggle}
-            ModalProps={{ keepMounted: true }}
-            sx={{
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH, bgcolor: SIDEBAR_COLOR },
-            }}
-        >
+        <Drawer variant="temporary" open={isMobileMenuOpen} onClose={handleDrawerToggle} ModalProps={{ keepMounted: true }} sx={{ '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH, bgcolor: SIDEBAR_COLOR } }}>
             <SidebarContent navigate={navigate} />
         </Drawer>
     );
 }
 
 function MainDashboardContent({ navigate, user }) {
-    // ... (Styles) ...
-    const cardTransformGlowStyle = { /* ... */ borderRadius: 3, color: 'white', background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.5), rgba(3, 7, 18, 0.3))', border: '1px solid rgba(16, 185, 129, 0.2)', transition: 'border 0.3s, box-shadow 0.3s, transform 0.3s', '&:hover': { boxShadow: CARD_GLOW_SHADOW, borderColor: "rgba(16, 185, 129, 0.2)", transform: 'translateY(-6px)', } }
-    const quickActionButtonStyle = { /* ... */ bgcolor: 'rgba(0, 0, 0, 0.4)', color: 'white', borderColor: 'rgba(52, 211, 153, 0.1)', justifyContent: 'flex-start', py: 1.5, border: '1px solid rgba(52, 211, 153, 0.2)', boxShadow: 'none', fontWeight: 'bold', transition: 'box-shadow 0.3s, background-color 0.3s, border-color 0.3s', '&:hover': { borderColor: ACCENT_COLOR, backgroundColor: 'rgba(52, 211, 153, 0.1)', boxShadow: BUTTON_GLOW_SHADOW, } }
+    const cardTransformGlowStyle = { borderRadius: 3, color: 'white', background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.5), rgba(3, 7, 18, 0.3))', border: '1px solid rgba(16, 185, 129, 0.2)', transition: 'border 0.3s, box-shadow 0.3s, transform 0.3s', '&:hover': { boxShadow: CARD_GLOW_SHADOW, borderColor: "rgba(16, 185, 129, 0.2)", transform: 'translateY(-6px)', } }
+    const quickActionButtonStyle = { bgcolor: 'rgba(0, 0, 0, 0.4)', color: 'white', borderColor: 'rgba(52, 211, 153, 0.1)', justifyContent: 'flex-start', py: 1.5, border: '1px solid rgba(52, 211, 153, 0.2)', boxShadow: 'none', fontWeight: 'bold', transition: 'box-shadow 0.3s, background-color 0.3s, border-color 0.3s', '&:hover': { borderColor: ACCENT_COLOR, backgroundColor: 'rgba(52, 211, 153, 0.1)', boxShadow: BUTTON_GLOW_SHADOW, } }
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {/* Header */}
             <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, alignItems: { sm: "flex-start" }, justifyContent: "space-between", gap: 2, mt: 0 }}>
                 <Box>
                     <Typography variant="h4" sx={{ fontWeight: "bold", color: "white" }}>Employee Dashboard</Typography>
                     <Typography color={TEXT_MUTED} sx={{ mt: 0.5 }} variant="body1">Welcome back, **{user.name}**! Here's your IT support overview.</Typography>
                 </Box>
-                {/* Ask AI Assistant Button */}
-                <Button variant="contained" onClick={() => navigate("/employeeDashboardAIAssistant")}
-                    startIcon={<ChatIcon sx={{ width: 18 }} />}
-                    sx={{ background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`, color: 'black', py: 1, px: 2, fontSize: '0.875rem', fontWeight: 'bold', borderRadius: 2, alignSelf: { xs: 'stretch', sm: 'flex-start' }, whiteSpace: 'nowrap', transition: 'background-color 0.3s, box-shadow 0.3s, transform 0.3s', '&:hover': { bgcolor: ACCENT_HOVER_COLOR, boxShadow: `0 0 30px 0 rgba(52, 211, 153, 0.6)`, transform: 'translateY(-2px)', } }}>
-                    ASK AI ASSISTANT
-                </Button>
             </Box>
 
-            {/* Stats Grid */}
             <Grid container spacing={3}>
-                {statsData.map((stat) => { /* ... stat cards ... */
+                {statsData.map((stat) => {
                     const Icon = stat.icon;
                     return (
                         <Grid item xs={12} sm={6} md={3} key={stat.label}>
@@ -468,15 +425,12 @@ function MainDashboardContent({ navigate, user }) {
                 })}
             </Grid>
 
-            {/* Recent Activity Grid (2/3 Split) */}
             <Grid container spacing={3}>
-                {/* Recent Tickets Card */}
                 <Grid item xs={12} md={8}>
                     <Card sx={{ ...cardTransformGlowStyle, height: '100%',minWidth:560, display: 'flex', flexDirection: 'column', transition: 'none', '&:hover': { boxShadow: 'none', borderColor: 'rgba(52, 211, 153, 0.2)', transform: 'none' }}}>
                         <CardHeader
                             title={<Typography variant="h6" fontWeight="bold" color="white">Recent Tickets</Typography>}
                             subheader={<Typography variant="body2" color={TEXT_MUTED}>Your latest support requests</Typography>}
-                            // 🌟 FIX: Updated path
                             action={<Button size="small" sx={{ color: ACCENT_COLOR, fontWeight: 'bold' }} onClick={() => navigate("/employeeDashboardTicket")}>View All</Button>}
                             sx={{ pb: 0, pt: 2 }} />
                         <CardContent sx={{ p: 2, pt: 1, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
@@ -499,12 +453,10 @@ function MainDashboardContent({ navigate, user }) {
                     </Card>
                 </Grid>
 
-                {/* Quick Actions Card */}
                 <Grid item xs={12} md={4}>
                     <Card sx={{ ...cardTransformGlowStyle, height: '100%', minWidth:570,display: 'flex', flexDirection: 'column' }}>
                         <CardHeader title={<Typography variant="h6" fontWeight="bold" color="white">Quick Actions</Typography>} subheader={<Typography variant="body2" color={TEXT_MUTED}>Common IT support tasks</Typography>} sx={{ pb: 0, pt: 2 }} />
                         <CardContent sx={{ p: 2, pt: 1, flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            {/* 🌟 FIX: Updated quick action paths */}
                             <Button variant="outlined" fullWidth startIcon={<AssignmentIcon />} sx={quickActionButtonStyle} onClick={() => navigate("/employeeDashboardTicket")}>
                                 CREATE NEW TICKET
                             </Button>
@@ -522,51 +474,53 @@ function MainDashboardContent({ navigate, user }) {
     );
 }
 
-// ----------------------------------------------------------------------
 // --- MAIN APPLICATION COMPONENT (ENTRY) ---
-// ----------------------------------------------------------------------
 
 export default function EmployeeDashboard() {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
-    
-    // 🌟 FIX: Use real React Router hooks
     const navigate = useNavigate();
     const location = useLocation();
-    
-    const [user] = useState(mockUser);
+
+    // State for user is initialized to null
+    const [user, setUser] = useState(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // No need for 'currentPath' state, use location.pathname directly
-    const currentPath = location.pathname;
+    // Effect to check for user in localStorage on component mount
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        } else {
+            toast.error("Please log in to continue.");
+            navigate("/");
+        }
+    }, [navigate]);
 
     const handleDrawerToggle = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
-    // 🌟 FIX: Content Rendering Logic based on location.pathname
     const renderContent = () => {
-        switch (currentPath) {
+        switch (location.pathname) {
             case "/employeeDashboard":
                 return <MainDashboardContent navigate={navigate} user={user} />;
             case "/employeeDashboardTicket":
-                // Renders the component you need to open on click
                 return <EmployeeTicketPage />;
             case "/employeeDashboardAIAssistant":
-                return <PlaceholderPage title="AI Assistant" path={currentPath} />;
+                return <PlaceholderPage title="AI Assistant" path={location.pathname} />;
             case "/employeeDashboardKnowledge":
-                return <PlaceholderPage title="Knowledge Base" path={currentPath} />;
+                return <PlaceholderPage title="Knowledge Base" path={location.pathname} />;
             case "/employeeDashboardSettings":
-                return <PlaceholderPage title="Settings" path={currentPath} />;
+                return <PlaceholderPage title="Settings" path={location.pathname} />;
             case "/newtickets":
-                return <PlaceholderPage title="New Ticket Creation" path={currentPath} />;
+                return <PlaceholderPage title="New Ticket Creation" path={location.pathname} />;
             default:
-                // Handle / or any other deep links
                 return (
                     <Paper sx={{ p: 4, borderRadius: 3, bgcolor: CARD_BG_COLOR, border: '1px solid rgba(52, 211, 153, 0.2)' }}>
                         <Typography variant="h5" color="white" gutterBottom>404 - Page Not Found</Typography>
                         <Typography variant="body1" color={TEXT_MUTED}>
-                            No content mapped for path: **{currentPath}**.
+                            No content mapped for path: **{location.pathname}**.
                         </Typography>
                         <Button variant="contained" sx={{ mt: 2, bgcolor: ACCENT_COLOR, color: 'black' }} onClick={() => navigate("/employeeDashboard")}>Go to Dashboard</Button>
                     </Paper>
@@ -574,20 +528,24 @@ export default function EmployeeDashboard() {
         }
     };
 
-    // --- Desktop & Responsive Layout ---
+    // Loading state: Show a spinner while user is being verified
+    if (!user) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: MAIN_BG_COLOR }}>
+                <CircularProgress sx={{ color: ACCENT_COLOR }} />
+            </Box>
+        );
+    }
+
+    // --- Main Layout Render ---
     return (
         <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: MAIN_BG_COLOR, color: 'white', overflowX: 'hidden' }}>
-
-            {/* 1. Sidebar/Drawer */}
             <Sidebar
-                currentPath={currentPath} // Passed for highlighting
                 navigate={navigate}
                 isDesktop={isDesktop}
                 isMobileMenuOpen={isMobileMenuOpen}
                 handleDrawerToggle={handleDrawerToggle}
             />
-
-            {/* 2. Main Content Area */}
             <Box
                 component="main"
                 sx={{
@@ -596,32 +554,26 @@ export default function EmployeeDashboard() {
                     width: isDesktop ? `calc(100% - ${DRAWER_WIDTH}px)` : '100%',
                     p: 0,
                     minHeight: '100vh',
-                    overflowX: 'hidden', 
+                    overflowX: 'hidden',
                 }}
             >
-                {/* A) Header/User Info Row (Sticky Header) 
-                    *** FIX APPLIED: Header content is now within a Container matching MAX_CONTENT_WIDTH and padding. ***
-                */}
                 <Box sx={{
                     width: '100%',
-                    position: 'sticky', 
-                    top: 0, 
-                    bgcolor: MAIN_BG_COLOR, 
+                    position: 'sticky',
+                    top: 0,
+                    bgcolor: MAIN_BG_COLOR,
                     zIndex: 500,
-                    borderBottom: '1px solid #1a1a1a', 
+                    borderBottom: '1px solid #1a1a1a',
                 }}>
-                    <Container maxWidth="xl" sx={{ 
-                        display: "flex", 
-                        alignItems: "center", 
-                        justifyContent: "flex-end", 
-                        py: 2, 
-                        // Set explicit padding to match content below
+                    <Container maxWidth="xl" sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        py: 2,
                         px: 3,
-                        // Ensure the max width aligns with the content below
-                        maxWidth: MAX_CONTENT_WIDTH, 
-                        mx: 'auto' 
+                        maxWidth: MAX_CONTENT_WIDTH,
+                        mx: 'auto'
                     }}>
-                        {/* Menu button for mobile */}
                         {!isDesktop && (
                             <IconButton onClick={handleDrawerToggle} sx={{ color: ACCENT_COLOR, position: 'absolute', left: 24 }}>
                                 <MenuIcon />
@@ -638,14 +590,10 @@ export default function EmployeeDashboard() {
                         </Box>
                     </Container>
                 </Box>
-
-                {/* B) Main Content Body (Dashboard/Page View) */}
                 <Container maxWidth="xl" sx={{ pt: 4, pb: 6, px: 3, maxWidth: MAX_CONTENT_WIDTH }}>
-                    {renderContent()} {/* <-- Renders content based on the URL */}
+                    {renderContent()}
                 </Container>
             </Box>
-
-            {/* 3. AI Chatbot Widget */}
             <AIChatWidget />
         </Box>
     );

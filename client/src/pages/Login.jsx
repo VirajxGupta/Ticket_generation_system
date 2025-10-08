@@ -12,71 +12,67 @@ import {
   Select,
   FormControl,
   InputLabel,
-  CircularProgress, // Import for loading spinner
+  CircularProgress,
+  Link, // Import Link for the forgot password feature
 } from "@mui/material";
-import { Bot, LogIn } from "lucide-react"; // Added LogIn icon for extra touch
+import { Bot, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-// --- Theme Styles Mapping ---
+// --- Theme Styles Mapping (No changes here) ---
 const themeStyles = {
-  // Main container background and text color
   container: {
     height: "100vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000000", // Black background
+    backgroundColor: "#000000",
     color: "#ffffff",
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
     position: 'relative',
     overflow: 'hidden',
   },
-  // Dark card style with green accents (inspired by featureCard)
   card: {
-    borderRadius: "1rem", // Slightly more rounded than before
-    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.6))', // Dark, semi-transparent background
-    border: '1px solid rgba(16, 185, 129, 0.3)', // Subtle green border
-    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.1), 0 0 10px rgba(0,0,0,0.5)', // Subtle shadow
+    borderRadius: "1rem",
+    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.6))',
+    border: '1px solid rgba(16, 185, 129, 0.3)',
+    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.1), 0 0 10px rgba(0,0,0,0.5)',
     backdropFilter: 'blur(10px)',
-    p: 3, // Increased padding
+    p: 3,
   },
-  // Input field styles (TextField and Select)
   inputField: {
-    borderRadius: "0.5rem", // Slightly rounded
-    backgroundColor: "rgba(17, 24, 39, 0.7)", // Darker input background
-    border: "1px solid rgba(16, 185, 129, 0.2)", // Thin green border
+    borderRadius: "0.5rem",
+    backgroundColor: "rgba(17, 24, 39, 0.7)",
+    border: "1px solid rgba(16, 185, 129, 0.2)",
     boxShadow: "none",
     fontSize: 14,
     color: "white",
     "&::placeholder": { fontSize: 12, color: "rgba(255,255,255,0.6)" },
-    "& fieldset": { border: "none" }, // Hide default MUI border
+    "& fieldset": { border: "none" },
     "&:hover fieldset": { border: "none" },
     "&.Mui-focused fieldset": { border: "none" },
   },
-  // Primary button style (green gradient)
   primaryButton: {
     mt: 2,
     textTransform: "none",
     borderRadius: "0.5rem",
     fontSize: 14,
     py: 1.2,
-    background: 'linear-gradient(to right, #34d399, #10b981)', // Green gradient
+    background: 'linear-gradient(to right, #34d399, #10b981)',
     color: '#000000',
     fontWeight: 600,
     transition: 'all 0.3s',
     "&:hover": {
-        background: 'linear-gradient(to right, #10b981, #059669)', // Darker hover
-        boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)',
-        transform: 'translateY(-2px)',
+      background: 'linear-gradient(to right, #10b981, #059669)',
+      boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)',
+      transform: 'translateY(-2px)',
     },
-    "&.Mui-disabled": { // Style for disabled state
+    "&.Mui-disabled": {
       background: 'rgba(52, 211, 153, 0.5)',
       color: '#333333',
     }
   },
-  // Logo Icon Container
   logoIconContainer: {
     width: 48,
     height: 48,
@@ -87,11 +83,10 @@ const themeStyles = {
     justifyContent: "center",
     mx: "auto",
     mb: 1,
-    boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)', // Green glow
+    boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)',
     overflow: 'hidden',
     position: 'relative',
   },
-  // Typography
   titleText: {
     fontWeight: 800,
     fontSize: 28,
@@ -106,13 +101,13 @@ const themeStyles = {
     fontWeight: 300,
   },
   linkText: {
-    color: "#34d399", // Green link color
+    color: "#34d399",
     textDecoration: "underline",
+    cursor: "pointer",
     "&:hover": {
       color: "#10b981",
     }
   },
-  // Floating Orbs for the landing page theme
   floatingOrb1: {
     position: 'absolute',
     top: '5rem',
@@ -146,7 +141,7 @@ const themeStyles = {
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(""); // admin / employee
+  const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -172,17 +167,15 @@ export default function LoginPage() {
       if (!res.ok) {
         toast.error(data.message || "Invalid credentials ❌");
       } else {
-        // Successful login
         localStorage.setItem("user", JSON.stringify(data.user));
         toast.success(data.message || "Login successful ✅");
 
-        // Redirect based on role returned by backend
         if (data.user.role === "admin") {
           navigate("/supportdashboard");
         } else if (data.user.role === "employee") {
           navigate("/employeeDashboard");
         } else {
-          navigate("/"); // fallback
+          navigate("/");
         }
       }
     } catch (error) {
@@ -195,28 +188,19 @@ export default function LoginPage() {
 
   return (
     <Box sx={themeStyles.container}>
-      {/* CSS Keyframes (replicate from LandingPage) */}
       <style>{`
         @keyframes floatingGlow {
-          0%, 100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translateY(-20px) scale(1.1);
-            opacity: 0.6;
-          }
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+          50% { transform: translateY(-20px) scale(1.1); opacity: 0.6; }
         }
-        .MuiFormLabel-root { color: #9ca3af !important; } /* Label color */
-        .MuiInputLabel-shrink { color: #34d399 !important; } /* Focused label color */
+        .MuiFormLabel-root { color: #9ca3af !important; }
+        .MuiInputLabel-shrink { color: #34d399 !important; }
       `}</style>
-
-      {/* Background Orbs */}
+      
       <Box sx={themeStyles.floatingOrb1} />
       <Box sx={themeStyles.floatingOrb2} />
 
       <Box sx={{ width: "100%", maxWidth: 400, position: 'relative', zIndex: 10 }}>
-        {/* Logo */}
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Box sx={themeStyles.logoIconContainer}>
             <Bot size={24} color="black" strokeWidth={2.5} style={{ position: 'relative', zIndex: 10 }} />
@@ -229,37 +213,23 @@ export default function LoginPage() {
           </Typography>
         </Box>
 
-        {/* Login Card */}
         <Card sx={themeStyles.card}>
           <CardHeader
-            sx={{ pt: 1, pb: 2 }}
+            sx={{ pt: 1, pb: 2, textAlign: 'center' }}
             title={
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  color: "white",
-                  fontWeight: 600,
-                  fontSize: 22,
-                }}
-              >
+              <Typography variant="h6" sx={{ color: "white", fontWeight: 600 }}>
                 Welcome Back
               </Typography>
             }
             subheader={
-              <Typography
-                variant="caption"
-                sx={{ display: "flex", justifyContent: "center", color: "#6b7280", fontSize: 12 }}
-              >
-                Enter your credentials to access the unified ticketing system
+              <Typography variant="caption" sx={{ color: "#6b7280" }}>
+                Enter credentials to access the ticketing system
               </Typography>
             }
           />
 
           <CardContent sx={{ py: 1 }}>
             <form onSubmit={handleSubmit}>
-              {/* Email */}
               <Box sx={{ mb: 2 }}>
                 <TextField
                   label="Email Address"
@@ -273,13 +243,11 @@ export default function LoginPage() {
                 />
               </Box>
 
-              {/* Role Dropdown */}
               <Box sx={{ mb: 2 }}>
                 <FormControl fullWidth>
-                  <InputLabel id="role-select-label" sx={{ color: '#9ca3af' }}>Role</InputLabel>
+                  <InputLabel id="role-select-label">Role</InputLabel>
                   <Select
                     labelId="role-select-label"
-                    id="role-select"
                     value={role}
                     label="Role"
                     onChange={(e) => setRole(e.target.value)}
@@ -287,7 +255,7 @@ export default function LoginPage() {
                     sx={{
                       ...themeStyles.inputField,
                       "& .MuiSelect-select": { py: '12.5px' },
-                      "& .MuiSelect-icon": { color: "#34d399" }, // Green icon
+                      "& .MuiSelect-icon": { color: "#34d399" },
                     }}
                   >
                     <MenuItem value="admin">Admin</MenuItem>
@@ -295,9 +263,8 @@ export default function LoginPage() {
                   </Select>
                 </FormControl>
               </Box>
-
-              {/* Password */}
-              <Box sx={{ mb: 1 }}>
+              
+              <Box>
                 <TextField
                   label="Password"
                   placeholder="Enter your password"
@@ -309,8 +276,19 @@ export default function LoginPage() {
                   InputProps={{ sx: themeStyles.inputField }}
                 />
               </Box>
+              
+              {/* --- FORGOT PASSWORD LINK --- */}
+              <Box sx={{ textAlign: 'right', mt: 1, mb: 1 }}>
+                <Link
+                  component="button"
+                  variant="caption"
+                  onClick={() => navigate('/forgot-password')}
+                  sx={{...themeStyles.linkText, fontSize: '12px'}}
+                >
+                  Forgot Password?
+                </Link>
+              </Box>
 
-              {/* Sign In Button */}
               <Button
                 type="submit"
                 variant="contained"
@@ -319,7 +297,7 @@ export default function LoginPage() {
                 sx={themeStyles.primaryButton}
               >
                 {isLoading ? (
-                  <CircularProgress size={20} color="inherit" sx={{ color: 'black' }} />
+                  <CircularProgress size={20} sx={{ color: 'black' }} />
                 ) : (
                   <>
                     <LogIn size={18} style={{ marginRight: 8 }} /> Sign In
@@ -330,11 +308,15 @@ export default function LoginPage() {
           </CardContent>
 
           <CardActions sx={{ justifyContent: "center", mb: 1, py: 0.5 }}>
-            <Typography variant="caption" sx={{ color: "#6b7280", fontSize: 12 }}>
+            <Typography variant="caption" sx={{ color: "#6b7280" }}>
               Don't have an account?{" "}
-              <a href="/signup" style={themeStyles.linkText}>
+              <Link
+                component="button"
+                onClick={() => navigate('/signup')}
+                sx={themeStyles.linkText}
+              >
                 Sign up
-              </a>
+              </Link>
             </Typography>
           </CardActions>
         </Card>
@@ -343,7 +325,10 @@ export default function LoginPage() {
           variant="caption"
           sx={{ display: "block", textAlign: "center", color: "#4b5563", mt: 4, fontSize: 11 }}
         >
-          For IT support issues, contact <a href="mailto:helpdesk@powergrid.com" style={{ color: "#34d399" }}>helpdesk@powergrid.com</a>
+          For IT support issues, contact{" "}
+          <a href="mailto:helpdesk@powergrid.com" style={{ color: "#34d399" }}>
+            helpdesk@powergrid.com
+          </a>
         </Typography>
       </Box>
     </Box>
