@@ -13,11 +13,15 @@ import {
   FormControl,
   InputLabel,
   Select,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { Bot, UserPlus } from "lucide-react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react"; // 👈 Add this import at the top
 
 // --- Theme Styles Mapping ---
 const themeStyles = {
@@ -29,17 +33,20 @@ const themeStyles = {
     alignItems: "center",
     backgroundColor: "#000000",
     color: "#ffffff",
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-    position: 'relative',
-    overflow: 'hidden',
+    fontFamily:
+      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    position: "relative",
+    overflow: "hidden",
     p: 2,
   },
   card: {
     borderRadius: "1rem",
-    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.6))',
-    border: '1px solid rgba(16, 185, 129, 0.3)',
-    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.1), 0 0 10px rgba(0,0,0,0.5)',
-    backdropFilter: 'blur(10px)',
+    background:
+      "linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.6))",
+    border: "1px solid rgba(16, 185, 129, 0.3)",
+    boxShadow:
+      "0 10px 30px rgba(16, 185, 129, 0.1), 0 0 10px rgba(0,0,0,0.5)",
+    backdropFilter: "blur(10px)",
     p: 3,
   },
   inputField: {
@@ -58,50 +65,51 @@ const themeStyles = {
     borderRadius: "0.5rem",
     fontSize: 14,
     py: 1.2,
-    background: 'linear-gradient(to right, #34d399, #10b981)',
-    color: '#000000',
+    background: "linear-gradient(to right, #34d399, #10b981)",
+    color: "#000000",
     fontWeight: 600,
-    transition: 'all 0.3s',
+    transition: "all 0.3s",
     "&:hover": {
-        background: 'linear-gradient(to right, #10b981, #059669)',
-        boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)',
-        transform: 'translateY(-2px)',
+      background: "linear-gradient(to right, #10b981, #059669)",
+      boxShadow: "0 0 20px rgba(16, 185, 129, 0.4)",
+      transform: "translateY(-2px)",
     },
     "&.Mui-disabled": {
-      background: 'rgba(52, 211, 153, 0.5)',
-      color: '#333333',
-    }
+      background: "rgba(52, 211, 153, 0.5)",
+      color: "#333333",
+    },
   },
   logoIconContainer: {
     width: 48,
     height: 48,
-    background: 'linear-gradient(to bottom right, #34d399, #10b981, #14b8a6)',
+    background:
+      "linear-gradient(to bottom right, #34d399, #10b981, #14b8a6)",
     borderRadius: 2,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     mx: "auto",
     mb: 1,
-    boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)',
-    overflow: 'hidden',
-    position: 'relative',
-    animation: 'logoPulse 2s ease-in-out infinite', // Animation for the container
+    boxShadow: "0 0 20px rgba(16, 185, 129, 0.5)",
+    overflow: "hidden",
+    position: "relative",
+    animation: "logoPulse 2s ease-in-out infinite",
   },
   logoBotIcon: {
-    position: 'relative',
+    position: "relative",
     zIndex: 10,
-    animation: 'float 3s ease-in-out infinite', // Animation for the bot icon itself
+    animation: "float 3s ease-in-out infinite",
   },
   titleText: {
     fontWeight: 800,
     fontSize: 28,
-    background: 'linear-gradient(to right, #f3f4f6, #ffffff, #d1d5db)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
+    background: "linear-gradient(to right, #f3f4f6, #ffffff, #d1d5db)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
   },
   subtitleText: {
-    color: '#9ca3af',
+    color: "#9ca3af",
     fontSize: 14,
     fontWeight: 300,
   },
@@ -110,37 +118,36 @@ const themeStyles = {
     textDecoration: "underline",
     "&:hover": {
       color: "#10b981",
-    }
+    },
   },
   floatingOrb1: {
-    position: 'absolute',
-    top: '5rem',
-    left: '25%',
-    width: '24rem',
-    height: '24rem',
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: '50%',
-    filter: 'blur(80px)',
-    pointerEvents: 'none',
-    animation: 'floatingGlow 4s ease-in-out infinite',
+    position: "absolute",
+    top: "5rem",
+    left: "25%",
+    width: "24rem",
+    height: "24rem",
+    backgroundColor: "rgba(16, 185, 129, 0.1)",
+    borderRadius: "50%",
+    filter: "blur(80px)",
+    pointerEvents: "none",
+    animation: "floatingGlow 4s ease-in-out infinite",
     zIndex: 0,
   },
   floatingOrb2: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    right: '25%',
-    width: '24rem',
-    height: '24rem',
-    backgroundColor: 'rgba(16, 185, 129, 0.08)',
-    borderRadius: '50%',
-    filter: 'blur(80px)',
-    pointerEvents: 'none',
-    animation: 'floatingGlow 4s ease-in-out infinite',
-    animationDelay: '2s',
+    right: "25%",
+    width: "24rem",
+    height: "24rem",
+    backgroundColor: "rgba(16, 185, 129, 0.08)",
+    borderRadius: "50%",
+    filter: "blur(80px)",
+    pointerEvents: "none",
+    animation: "floatingGlow 4s ease-in-out infinite",
+    animationDelay: "2s",
     zIndex: 0,
-  }
+  },
 };
-
 
 export default function SignupPage() {
   const [name, setname] = useState("");
@@ -149,20 +156,26 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (e) => e.preventDefault();
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !email || !employeeId || !password || !role) {
-        toast.error("All fields are required ❌");
-        return;
+      toast.error("All fields are required ❌");
+      return;
     }
 
     setIsLoading(true);
 
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+      const backendUrl =
+        import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
       const res = await axios.post(`${backendUrl}/api/register`, {
         name,
@@ -172,10 +185,8 @@ export default function SignupPage() {
         role,
       });
 
-      console.log(res.data);
-      
-      toast.success(res.data.message || "Registration successful! Please log in. ✅");
-      navigate("/login"); 
+      toast.success(res.data.message || "Registration successful! ✅");
+      navigate("/login");
     } catch (err) {
       console.error("Signup error:", err.response?.data || err.message);
       toast.error(err.response?.data?.message || "Something went wrong ❌");
@@ -188,36 +199,21 @@ export default function SignupPage() {
     <Box sx={themeStyles.container}>
       <style>{`
         @keyframes floatingGlow {
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+          50% { transform: translateY(-20px) scale(1.1); opacity: 0.6; }
+        }
+        @keyframes logoPulse {
           0%, 100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.3;
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7), 0 0 20px rgba(16, 185, 129, 0.5);
           }
           50% {
-            transform: translateY(-20px) scale(1.1);
-            opacity: 0.6;
+            box-shadow: 0 0 0 10px rgba(52, 211, 153, 0), 0 0 20px rgba(16, 185, 129, 0.5);
           }
         }
-        
-        /* --- NEW ANIMATIONS ADDED HERE --- */
-        @keyframes logoPulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7), 0 0 20px rgba(16, 185, 129, 0.5);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0), 0 0 20px rgba(16, 185, 129, 0.5);
-            }
-        }
-
         @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-3px);
-            }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-3px); }
         }
-        /* --- END OF NEW ANIMATIONS --- */
-
         .MuiFormLabel-root { color: #9ca3af !important; }
         .MuiInputLabel-shrink { color: #34d399 !important; }
       `}</style>
@@ -226,11 +222,9 @@ export default function SignupPage() {
       <Box sx={themeStyles.floatingOrb1} />
       <Box sx={themeStyles.floatingOrb2} />
 
-      <Box sx={{ width: "100%", maxWidth: 400, position: 'relative', zIndex: 10 }}>
-        {/* Logo */}
-        <Box sx={{ textAlign: "center", mb: 4, mt: 0 }}>
+      <Box sx={{ width: "100%", maxWidth: 400, position: "relative", zIndex: 10 }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
           <Box sx={themeStyles.logoIconContainer}>
-             {/* --- UPDATED BOT ICON WITH NEW STYLE --- */}
             <Bot size={24} color="black" strokeWidth={2.5} style={themeStyles.logoBotIcon} />
           </Box>
           <Typography variant="h4" sx={themeStyles.titleText}>
@@ -241,7 +235,6 @@ export default function SignupPage() {
           </Typography>
         </Box>
 
-        {/* Signup Card */}
         <Card sx={themeStyles.card}>
           <CardHeader
             sx={{ pt: 1, pb: 2 }}
@@ -264,41 +257,103 @@ export default function SignupPage() {
           />
           <CardContent sx={{ py: 1 }}>
             <form onSubmit={handleSubmit}>
-              {/* Fields Array */}
-              {[
-                { label: "Full Name", value: name, setter: setname, placeholder: "Your Full Name", type: "text" },
-                { label: "Email Address", value: email, setter: setEmail, placeholder: "employee@powergrid.com", type: "email" },
-                { label: "Employee ID", value: employeeId, setter: setEmployeeId, placeholder: "Your Employee ID", type: "text" },
-                { label: "Password", value: password, setter: setPassword, placeholder: "Create a secure password", type: "password" },
-              ].map((field, i) => (
-                <Box sx={{ mb: 2 }} key={i}>
-                  <TextField
-                    label={field.label}
-                    placeholder={field.placeholder}
-                    type={field.type}
-                    value={field.value}
-                    onChange={(e) => field.setter(e.target.value)}
-                    fullWidth
-                    margin="dense"
-                    InputProps={{ sx: themeStyles.inputField }}
-                  />
-                </Box>
-              ))}
+              {/* Name */}
+              <Box sx={{ mb: 2 }}>
+                <TextField
+                  label="Full Name"
+                  placeholder="Your Full Name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setname(e.target.value)}
+                  fullWidth
+                  margin="dense"
+                  InputProps={{ sx: themeStyles.inputField }}
+                />
+              </Box>
+
+              {/* Email */}
+              <Box sx={{ mb: 2 }}>
+                <TextField
+                  label="Email Address"
+                  placeholder="employee@powergrid.com"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                  margin="dense"
+                  InputProps={{ sx: themeStyles.inputField }}
+                />
+              </Box>
+
+              {/* Employee ID */}
+              <Box sx={{ mb: 2 }}>
+                <TextField
+                  label="Employee ID"
+                  placeholder="Your Employee ID"
+                  type="text"
+                  value={employeeId}
+                  onChange={(e) => setEmployeeId(e.target.value)}
+                  fullWidth
+                  margin="dense"
+                  InputProps={{ sx: themeStyles.inputField }}
+                />
+              </Box>
+
+              {/* Password with white eye icon */}
+              <Box sx={{ mb: 2 }}>
+  <TextField
+    label="Password"
+    placeholder="Create a secure password"
+    type={showPassword ? "text" : "password"}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    fullWidth
+    margin="dense"
+    InputProps={{
+      sx: themeStyles.inputField,
+      endAdornment: (
+        <InputAdornment position="end">
+          <IconButton
+            onClick={() => setShowPassword(!showPassword)}
+            edge="end"
+            sx={{
+              color: "gray", // 👈 makes icon white
+              p: 1.5, // less padding for compact look
+              "&:hover": {
+                color: "#00ffcc", // 👈 slight glow effect on hover
+              },
+            }}
+          >
+            {showPassword ? (
+              <EyeOff size={18} />
+            ) : (
+              <Eye size={18} />
+            )}
+          </IconButton>
+        </InputAdornment>
+      ),
+    }}
+  />
+</Box>
 
               {/* Role Dropdown */}
               <Box sx={{ mb: 2 }}>
                 <FormControl fullWidth>
-                  <InputLabel id="role-select-label" sx={{ color: '#9ca3af' }}>Role</InputLabel>
+                  <InputLabel id="role-select-label" sx={{ color: "#9ca3af" }}>
+                    Role
+                  </InputLabel>
                   <Select
                     labelId="role-select-label"
-                    id="role-select"
                     value={role}
-                    label="Role"
                     onChange={(e) => setRole(e.target.value)}
-                    MenuProps={{ PaperProps: { sx: { backgroundColor: '#111827', color: 'white' } } }}
+                    MenuProps={{
+                      PaperProps: {
+                        sx: { backgroundColor: "#111827", color: "white" },
+                      },
+                    }}
                     sx={{
                       ...themeStyles.inputField,
-                      "& .MuiSelect-select": { py: '12.5px' },
+                      "& .MuiSelect-select": { py: "12.5px" },
                       "& .MuiSelect-icon": { color: "#34d399" },
                     }}
                   >
@@ -308,7 +363,6 @@ export default function SignupPage() {
                 </FormControl>
               </Box>
 
-              {/* Sign Up Button */}
               <Button
                 type="submit"
                 variant="contained"
@@ -317,7 +371,7 @@ export default function SignupPage() {
                 sx={themeStyles.primaryButton}
               >
                 {isLoading ? (
-                  <CircularProgress size={20} color="inherit" sx={{ color: 'black' }} />
+                  <CircularProgress size={20} sx={{ color: "black" }} />
                 ) : (
                   <>
                     <UserPlus size={18} style={{ marginRight: 8 }} /> Sign Up
@@ -349,7 +403,10 @@ export default function SignupPage() {
           width: "100%",
         }}
       >
-        For IT support issues, contact <a href="mailto:helpdesk@powergrid.com" style={{ color: "#34d399" }}>helpdesk@powergrid.com</a>
+        For IT support issues, contact{" "}
+        <a href="mailto:helpdesk@powergrid.com" style={{ color: "#34d399" }}>
+          helpdesk@powergrid.com
+        </a>
       </Typography>
     </Box>
   );

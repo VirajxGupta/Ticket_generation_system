@@ -196,6 +196,47 @@ function PowerGridSupport() {
     }
   };
 
+  const detectLanguage = (text) => {
+    // Hindi detection
+    const hindiPattern = /[\u0900-\u097F]/;
+    if (hindiPattern.test(text)) return 'hi-IN';
+    
+    // Bengali detection
+    const bengaliPattern = /[\u0980-\u09FF]/;
+    if (bengaliPattern.test(text)) return 'bn-IN';
+    
+    // Tamil detection
+    const tamilPattern = /[\u0B80-\u0BFF]/;
+    if (tamilPattern.test(text)) return 'ta-IN';
+    
+    // Telugu detection
+    const teluguPattern = /[\u0C00-\u0C7F]/;
+    if (teluguPattern.test(text)) return 'te-IN';
+    
+    // Gujarati detection
+    const gujaratiPattern = /[\u0A80-\u0AFF]/;
+    if (gujaratiPattern.test(text)) return 'gu-IN';
+    
+    // Marathi detection
+    const marathiPattern = /[\u0900-\u097F]/;
+    if (marathiPattern.test(text)) return 'mr-IN';
+    
+    // Kannada detection
+    const kannadaPattern = /[\u0C80-\u0CFF]/;
+    if (kannadaPattern.test(text)) return 'kn-IN';
+    
+    // Malayalam detection
+    const malayalamPattern = /[\u0D00-\u0D7F]/;
+    if (malayalamPattern.test(text)) return 'ml-IN';
+    
+    // Punjabi detection
+    const punjabiPattern = /[\u0A00-\u0A7F]/;
+    if (punjabiPattern.test(text)) return 'pa-IN';
+    
+    // Default to English
+    return 'en-IN';
+  };
+
   const speakMessage = (text, messageId) => {
     window.speechSynthesis.cancel();
 
@@ -205,7 +246,7 @@ function PowerGridSupport() {
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-IN';
+    utterance.lang = detectLanguage(text);
     utterance.rate = 0.95;
     utterance.pitch = 1;
     utterance.volume = 1;
