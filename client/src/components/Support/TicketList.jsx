@@ -96,23 +96,23 @@ const mockTickets = [
 ];
 
 const gradientText = {
-  background: "linear-gradient(to right, #34d399, #10b981)",
+  background: "linear-gradient(to right, #ffffffff, #10b981)",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
 };
 
 const priorityColors = {
-  low: "#93C5FD",
-  medium: "#FBBF24",
-  high: "#F97316",
-  critical: "#EF4444",
+  low: "#436c9aff",
+  medium: "#b38921ff",
+  high: "#a14300ff",
+  critical: "#8f2626ff",
 };
 
 const statusColors = {
-  open: "#34D399",
-  in_progress: "#A78BFA",
-  pending: "#FBBF24",
-  resolved: "#22C55E",
+  open: "#129263ff",
+  in_progress: "#5d4a97ff",
+  pending: "#ab821bdf",
+  resolved: "#11883dff",
   closed: "#9CA3AF",
 };
 
@@ -139,10 +139,10 @@ export default function TicketList({ onSelectTicket, selectedTicket, searchQuery
             cursor: "pointer",
             p: 2,
             borderRadius: 2,
-            bgcolor: selectedTicket === ticket.id ? "#111" : "#0A0A0A",
+            bgcolor: "#00000080",
             border: selectedTicket === ticket.id
               ? "1px solid #10b981"
-              : "1px solid rgba(255,255,255,0.08)",
+              : "1px solid rgba(27, 43, 36, 1)",
             boxShadow: "0 0 8px rgba(0,0,0,0.4)",
             color: "#fff",
             transition: "all 0.3s ease",

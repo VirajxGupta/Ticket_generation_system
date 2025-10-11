@@ -17,11 +17,11 @@ import {
   Avatar,
   Drawer,
   List,
-  ListItem, // Added
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider, // Added
+  Divider,
 } from "@mui/material";
 import {
   Search,
@@ -34,14 +34,24 @@ import {
   TrendingUp,
   Bot,
   BookOpen,
-  Bell,
   Sparkles,
   Menu,
   X,
   Settings,
-  LogOut, // Added
+  LogOut,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+
+// --- THEME CONSTANTS ---
+const MAIN_BG_COLOR = '#000000'; 
+const SIDEBAR_COLOR = '#030712'; 
+const ACCENT_COLOR = '#34d399'; 
+const ACCENT_HOVER_COLOR = '#10b981'; 
+const TEXT_MUTED = '#9ca3af'; 
+const DARK_CARD_COLOR = 'rgba(3, 7, 18, 0.6)';
+const CARD_HOVER_BG = 'rgba(52, 211, 153, 0.05)';
+const CARD_GLOW_SHADOW = `0 15px 30px 0 rgba(16, 185, 129, 0.2)`;
+// ----------------------------------------------------------------------
 
 const myTickets = [
   {
@@ -111,6 +121,15 @@ export default function MyTicketsView() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const sidebarItems = [
+    { label: "All Tickets", icon: Ticket, href: "/supportdashboard" },
+    { label: "My Tickets", icon: Users, href: "/tickets" },
+    { label: "Employee Chatbot", icon: Bot, href: "/chatbot" },
+    { label: "AI Classification", icon: Sparkles, href: "/classify" },
+    { label: "Knowledge Base", icon: BookOpen, href: "/knowledgebase" },
+    { label: "Analytics", icon: TrendingUp, href: "/analytics" },
+  ];
+
   const filteredTickets = myTickets.filter((ticket) => {
     const matchesSearch =
       ticket.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -123,30 +142,30 @@ export default function MyTicketsView() {
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "critical":
-        return { bgcolor: "#450a0a", color: "#fca5a5" };
+        return { bgcolor: "#450a0a", color: "#fca5a5" }; // dark red, light red
       case "high":
-        return { bgcolor: "#7c2d12", color: "#fdba74" };
+        return { bgcolor: "#5f200bff", color: "#feb362ff" }; // dark orange, light orange
       case "medium":
-        return { bgcolor: "#78350f", color: "#fcd34d" };
+        return { bgcolor: "#78350f", color: "#fcd34d" }; // dark yellow, light yellow
       case "low":
-        return { bgcolor: "#064e3b", color: "#6ee7b7" };
+        return { bgcolor: "#064e3b", color: "#6ee7b7" }; // dark green, light green
       default:
-        return { bgcolor: "#1f2937", color: "#9ca3af" };
+        return { bgcolor: "#1f2937", color: TEXT_MUTED };
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
       case "open":
-        return { bgcolor: "#1e3a8a", color: "#93c5fd" };
+        return { bgcolor: "#1e3a8a", color: "#93c5fd" }; // dark blue, light blue
       case "in_progress":
-        return { bgcolor: "#4c1d95", color: "#c4b5fd" };
+        return { bgcolor: "#4c1d95", color: "#c4b5fd" }; // dark purple, light purple
       case "resolved":
-        return { bgcolor: "#064e3b", color: "#6ee7b7" };
+        return { bgcolor: "#064e3b", color: "#6ee7b7" }; // dark green, light green
       case "closed":
-        return { bgcolor: "#374151", color: "#9ca3af" };
+        return { bgcolor: "#374151", color: TEXT_MUTED }; // dark gray, muted
       default:
-        return { bgcolor: "#374151", color: "#9ca3af" };
+        return { bgcolor: "#374151", color: TEXT_MUTED };
     }
   };
 
@@ -164,60 +183,95 @@ export default function MyTicketsView() {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const SidebarContent = (
-    <Box sx={{ width: 256, bgcolor: "#1a1a1a", height: "100%", display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ width: 256, bgcolor: SIDEBAR_COLOR, height: "100%", display: 'flex', flexDirection: 'column', color: 'white' }}>
       <Box>
         <Box
           sx={{
             height: 64,
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
             px: 3,
             display: "flex",
             alignItems: "center",
-            bgcolor: "#111",
+            bgcolor: DARK_CARD_COLOR,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Avatar
-              sx={{
-                bgcolor: "transparent",
-                background: "linear-gradient(to right, #34d399, #10b981)",
-                width: 32,
-                height: 32,
-              }}
-            >
-              <Ticket size={16} color="#fff" />
-            </Avatar>
-            <Typography variant="subtitle1" fontWeight="600" color="#fff">
-              POWERGRID IT
-            </Typography>
+          {/* --- LOGO UPDATED HERE --- */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{
+                  position: 'relative',
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  bgcolor: ACCENT_COLOR,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  animation: 'logoPulse 2s ease-in-out infinite' // Pulse animation
+              }}>
+                  <Box sx={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      backdropFilter: 'blur(2px)',
+                  }} />
+                  <Bot 
+                    size={24} 
+                    color="#000000" 
+                    strokeWidth={2.5} 
+                    style={{ 
+                      position: 'relative', 
+                      zIndex: 10,
+                      animation: 'float 3s ease-in-out infinite' // Float animation
+                    }} 
+                  />
+              </Box>
+              <Typography variant="h6" fontWeight="bold" color="white">
+                  POWERGRID
+              </Typography>
           </Box>
+          {/* --- END OF LOGO UPDATE --- */}
         </Box>
-
         <List sx={{ p: 1 }}>
-          {[
-            { href: "/supportdashboard", icon: Ticket, label: "All Tickets" },
-            { href: "/tickets", icon: Users, label: "My Tickets" },
-            { href: "/chatbot", icon: Bot, label: "Employee Chatbot" },
-            { href: "/classify", icon: Sparkles, label: "AI Classification" },
-            { href: "/knowledgebase", icon: BookOpen, label: "Knowledge Base" },
-            { href: "/analytics", icon: TrendingUp, label: "Analytics" },
-            { href: "/settings", icon: Settings, label: "Settings" },
-          ].map((nav) => (
-            <ListItem key={nav.href} disablePadding>
+          {sidebarItems.map((item) => (
+            <ListItem key={item.label} disablePadding>
               <ListItemButton
                 component={Link}
-                to={nav.href}
+                to={item.href}
+                selected={item.label === "My Tickets"} 
                 sx={{
-                  color: "#fff",
+                  borderRadius: 2, 
+                  color: 'white',
+                  py: 1.5,
+                  "&.Mui-selected": {
+                    background: CARD_HOVER_BG,
+                    color: ACCENT_COLOR,
+                    "& .MuiListItemIcon-root": {
+                      color: ACCENT_COLOR,
+                    }
+                  },
                   "&:hover": {
-                    background: "linear-gradient(to right, #34d39933, #10b98133)",
+                    background: CARD_HOVER_BG,
+                    color: ACCENT_COLOR,
+                    "& .MuiListItemIcon-root": {
+                      color: ACCENT_COLOR,
+                    }
                   },
                 }}
               >
-                <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
-                  <nav.icon size={18} />
+                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                  <Box sx={{ width: 32, height: 32, borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                    <item.icon size={18} color={item.label === "My Tickets" ? ACCENT_COLOR : TEXT_MUTED} /> 
+                  </Box>
                 </ListItemIcon>
-                <ListItemText primary={nav.label} />
+                <ListItemText
+                  primary={
+                    <Typography variant="body2" color="inherit" fontWeight="medium">
+                      {item.label}
+                    </Typography>
+                  }
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -225,23 +279,60 @@ export default function MyTicketsView() {
       </Box>
 
       <Box sx={{ marginTop: 'auto' }}>
-        <Divider />
+        <Divider sx={{ bgcolor: 'rgba(52, 211, 153, 0.2)' }} /> 
         <List sx={{ p: 1 }}>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/settings"
+              sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
+                "&:hover": {
+                  background: CARD_HOVER_BG, 
+                  color: ACCENT_COLOR,
+                  "& .MuiListItemIcon-root": { color: ACCENT_COLOR },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                <Settings size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Settings
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
           <ListItem disablePadding>
             <ListItemButton
               component={Link}
               to="/"
               sx={{
-                color: "#fff",
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
                 "&:hover": {
-                  background: "linear-gradient(to right, #34d39933, #10b98133)",
+                  background: CARD_HOVER_BG, 
+                  color: '#ef4444',
+                  "& .MuiListItemIcon-root": { color: '#ef4444' },
                 },
               }}
             >
-              <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
                 <LogOut size={18} />
               </ListItemIcon>
-              <ListItemText primary="Logout" />
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Logout
+                  </Typography>
+                }
+              />
             </ListItemButton>
           </ListItem>
         </List>
@@ -250,21 +341,50 @@ export default function MyTicketsView() {
   );
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: "#0a0a0a", color: "#e5e5e5" }}>
+    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: MAIN_BG_COLOR, color: "white" }}>
+      <style>{`
+        @keyframes logoPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+      `}</style>
+
       {/* Sidebar for large screens */}
-      <Box sx={{ display: { xs: "none", md: "flex" }, width: 256 }}>{SidebarContent}</Box>
+      <Box 
+        sx={{ 
+          display: { xs: "none", md: "flex" }, 
+          width: 256,
+          borderRight: `1px solid rgba(52, 211, 153, 0.2)`,
+        }}
+      >
+        {SidebarContent}
+      </Box>
+
       {/* Drawer for mobile */}
-      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: "#1a1a1a" } }}>
+      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: SIDEBAR_COLOR } }}>
         {SidebarContent}
       </Drawer>
 
       {/* Main content */}
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto" }}>
-        {/* Header */}
+        {/* Header/Navbar */}
         <Box
           sx={{
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
-            bgcolor: "#000",
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`, 
+            bgcolor: MAIN_BG_COLOR,
             px: 3,
             display: "flex",
             flexDirection: { xs: "column", sm: "row" },
@@ -278,7 +398,7 @@ export default function MyTicketsView() {
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%" }}>
             <IconButton
-              sx={{ display: { xs: "inline-flex", md: "none" }, color: "#10b981" }}
+              sx={{ display: { xs: "inline-flex", md: "none" }, color: ACCENT_COLOR }}
               onClick={toggleSidebar}
             >
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -286,9 +406,9 @@ export default function MyTicketsView() {
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography
                 variant="h6"
-                fontWeight="600"
+                fontWeight="bold"
                 sx={{
-                  background: "linear-gradient(to right, #34d399, #10b981)",
+                  background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   whiteSpace: "nowrap",
@@ -300,7 +420,7 @@ export default function MyTicketsView() {
               </Typography>
               <Typography
                 variant="body2"
-                color="#9ca3af"
+                color={TEXT_MUTED}
                 sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
               >
                 Tickets assigned to you
@@ -308,7 +428,6 @@ export default function MyTicketsView() {
             </Box>
           </Box>
 
-          {/* Search */}
           <Box
             sx={{
               display: "flex",
@@ -323,10 +442,10 @@ export default function MyTicketsView() {
                 size={16}
                 style={{
                   position: "absolute",
-                  left: 12,
+                  left: 10,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  color: "#9CA3AF",
+                  color: TEXT_MUTED,
                 }}
               />
               <InputBase
@@ -336,16 +455,17 @@ export default function MyTicketsView() {
                 sx={{
                   pl: 5,
                   width: "100%",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 1,
+                  border: `1px solid rgba(52, 211, 153, 0.2)`,
+                  borderRadius: 2, 
                   py: 0.5,
-                  px: 1,
-                  bgcolor: "#1a1a1a",
-                  color: "#fff",
+                  px: 4,
+                  bgcolor: DARK_CARD_COLOR,
+                  color: "white",
+                  '& input::placeholder': { color: TEXT_MUTED }
                 }}
               />
             </Box>
-            <IconButton sx={{ color: "#10b981" }}>
+            <IconButton sx={{ color: ACCENT_COLOR, border: `1px solid rgba(52, 211, 153, 0.2)`, borderRadius: 2, p: 1 }}>
               <Filter size={16} />
             </IconButton>
           </Box>
@@ -353,29 +473,29 @@ export default function MyTicketsView() {
 
         {/* Stats cards */}
         <Box sx={{ p: 3, pb: 2 }}>
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             {stats.map((stat) => (
               <Grid item xs={12} sm={6} md={3} key={stat.label}>
                 <Card
                   sx={{
-                    bgcolor: "#000",
-                    color: "#fff",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    bgcolor: "#11182780",
+                    color: "white",
+                    border: `1px solid rgba(52, 211, 153, 0.15)`,
                     borderRadius: 3,
                     p: 1,
                     transition: "all 0.3s ease",
-                    boxShadow: "0 0 12px rgba(0,0,0,0.6)",
+                    boxShadow: `0 0 12px rgba(0,0,0,0.6)`,
                     "&:hover": {
-                      border: "1px solid #34d399",
+                      border: `1px solid ${ACCENT_COLOR}`,
                       transform: "translateY(-4px)",
-                      boxShadow: "0 0 20px rgba(52,211,153,0.3)",
+                      boxShadow: CARD_GLOW_SHADOW,
                     },
                   }}
                 >
                   <CardContent sx={{ p: 3 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <Box>
-                        <Typography variant="body2" color="#9ca3af">
+                        <Typography variant="body2" color={TEXT_MUTED}>
                           {stat.label}
                         </Typography>
                         <Typography
@@ -383,7 +503,7 @@ export default function MyTicketsView() {
                           fontWeight="bold"
                           sx={{
                             mt: 1,
-                            background: "linear-gradient(to right, #34d399, #10b981)",
+                            background: "white",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
                           }}
@@ -395,14 +515,15 @@ export default function MyTicketsView() {
                         sx={{
                           width: 52,
                           height: 52,
-                          background: "linear-gradient(to right, #34d399, #10b981)",
+                          bgcolor: ACCENT_COLOR,
                           display: "flex",
                           justifyContent: "center",
                           alignItems: "center",
-                          boxShadow: "0 0 10px rgba(52,211,153,0.4)",
+                          boxShadow: `0 0 10px ${ACCENT_COLOR}4D`,
+                          color: "black",
                         }}
                       >
-                        <stat.icon size={24} color="#fff" />
+                        <stat.icon size={24} />
                       </Avatar>
                     </Box>
                   </CardContent>
@@ -413,24 +534,30 @@ export default function MyTicketsView() {
         </Box>
 
         {/* Ticket List */}
-        <Box sx={{ px: 3, pb: 3 }}>
+        <Box sx={{ px: 3, pb: 3, flex: 1, overflowY: 'auto' }}>
           <Card
             sx={{
-              bgcolor: "#000",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "#fff",
+              bgcolor: DARK_CARD_COLOR,
+              border: `1px solid rgba(52, 211, 153, 0.15)`,
+              color: "white",
               borderRadius: 3,
               display: "flex",
               flexDirection: "column",
-              overflow: "visible",
-              boxShadow: "0 0 12px rgba(0,0,0,0.6)",
+              overflow: "hidden",
+              boxShadow: `0 0 12px rgba(0,0,0,0.6)`,
+              height: '100%'
             }}
           >
             <CardHeader
-              sx={{ pb: 1 }}
-              title="Your Assigned Tickets"
-              subheader="Manage tickets assigned to you"
-              subheaderTypographyProps={{ color: "#9ca3af" }}
+              sx={{ pb: 1, borderBottom: '1px solid #1a1a1a', bgcolor: "#11182780" }}
+              title={
+                <Typography variant="h6" fontWeight="bold">Your Assigned Tickets</Typography>
+              }
+              subheader={
+                <Typography color={TEXT_MUTED} variant="body2">
+                  Manage tickets assigned to you
+                </Typography>
+              }
               action={
                 <Tabs
                   value={statusFilter}
@@ -438,8 +565,11 @@ export default function MyTicketsView() {
                   textColor="inherit"
                   indicatorColor="primary"
                   sx={{
-                    "& .MuiTab-root": { color: "#9ca3af" },
-                    "& .Mui-selected": { color: "#10b981 !important" },
+                    "& .MuiTabs-indicator": {
+                      background: ACCENT_COLOR,
+                    },
+                    "& .MuiTab-root": { color: TEXT_MUTED, fontWeight: 'medium' },
+                    "& .Mui-selected": { color: ACCENT_COLOR, fontWeight: 'bold' },
                   }}
                   variant="scrollable"
                   scrollButtons="auto"
@@ -450,102 +580,141 @@ export default function MyTicketsView() {
                 </Tabs>
               }
             />
-            <CardContent sx={{ flex: "none", overflow: "visible" }}>
+            <CardContent sx={{ flex: 1, overflowY: "auto", p: 2 }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                {filteredTickets.map((ticket) => (
-                  <Card
-                    key={ticket.id}
-                    sx={{
-                      cursor: "pointer",
-                      p: 2,
-                      bgcolor: "#000",
-                      color: "#10b981", // This was an interesting choice, might be better as white/gray
-                      border:
-                        selectedTicket === ticket.id ? "1px solid #10b981" : "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: 3,
-                      transition: "all 0.3s ease",
-                      boxShadow: "0 0 12px rgba(0,0,0,0.6)",
-                      "&:hover": {
-                        border: "1px solid #34d399",
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 0 20px rgba(52,211,153,0.3)",
-                      },
-                    }}
-                    onClick={() => setSelectedTicket(ticket.id)}
-                  >
-                    <Box sx={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
-                      <Box sx={{ flex: 1, color: '#e5e5e5' }}> {/* Set text color back to default */}
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-                          <Typography fontWeight="bold">{ticket.title}</Typography>
-                          <Badge
-                            sx={{
-                              bgcolor: getPriorityColor(ticket.priority).bgcolor,
-                              color: getPriorityColor(ticket.priority).color,
-                              px: 1,
-                              borderRadius: '12px', // Make it a pill
-                              fontSize: '0.75rem',
-                              height: '20px',
-                              lineHeight: '20px'
-                            }}
-                          >
-                            {ticket.priority}
-                          </Badge>
-                          <Badge
-                            sx={{
-                              bgcolor: getStatusColor(ticket.status).bgcolor,
-                              color: getStatusColor(ticket.status).color,
-                              px: 1,
-                              borderRadius: '12px',
-                              fontSize: '0.75rem',
-                              height: '20px',
-                              lineHeight: '20px'
-                            }}
-                          >
-                            {ticket.status.replace("_", " ")}
-                          </Badge>
-                        </Box>
-                        <Typography variant="body2" color="#9ca3af" sx={{ mt: 1 }}>
-                          {ticket.description}
-                        </Typography>
-                        <Box
-                          sx={{ display: "flex", gap: 2, mt: 1, flexWrap: "wrap", fontSize: 12, color: "#9ca3af" }}
-                        >
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                            <Ticket size={12} /> {ticket.id}
+                {filteredTickets.length > 0 ? (
+                  filteredTickets.map((ticket) => (
+                    <Card
+                      key={ticket.id}
+                      sx={{
+                        cursor: "pointer",
+                        p: 2,
+                        bgcolor: MAIN_BG_COLOR,
+                        color: 'white', 
+                        border:
+                          selectedTicket === ticket.id ? `1px solid ${ACCENT_COLOR}` : `1px solid rgba(52, 211, 153, 0.15)`,
+                        borderRadius: 3,
+                        transition: "all 0.3s ease",
+                        boxShadow: "0 0 12px rgba(0,0,0,0.6)",
+                        "&:hover": {
+                          border: `1px solid ${ACCENT_COLOR}`,
+                          transform: "translateY(-2px)",
+                          boxShadow: CARD_GLOW_SHADOW,
+                          bgcolor: DARK_CARD_COLOR
+                        },
+                      }}
+                      onClick={() => setSelectedTicket(ticket.id)}
+                    >
+                      <Box sx={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
+                        <Box sx={{ flex: 1, color: 'white' }}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                            <Typography fontWeight="bold">{ticket.title}</Typography>
+                            <Badge
+                              sx={{
+                                bgcolor: getPriorityColor(ticket.priority).bgcolor,
+                                color: getPriorityColor(ticket.priority).color,
+                                px: 1,
+                                borderRadius: '12px', 
+                                fontSize: '0.75rem',
+                                height: '20px',
+                                lineHeight: '20px'
+                              }}
+                            >
+                              {ticket.priority}
+                            </Badge>
+                            <Badge
+                              sx={{
+                                bgcolor: getStatusColor(ticket.status).bgcolor,
+                                color: getStatusColor(ticket.status).color,
+                                px: 1,
+                                borderRadius: '12px',
+                                fontSize: '0.75rem',
+                                height: '20px',
+                                lineHeight: '20px'
+                              }}
+                            >
+                              {ticket.status.replace("_", " ")}
+                            </Badge>
                           </Box>
-                          <Box>Requester: {ticket.requester}</Box>
-                          <Box>Dept: {ticket.department}</Box>
-                          <Box>Source: {ticket.source}</Box>
-                          <Box>Category: {ticket.category}</Box>
+                          <Typography variant="body2" color={TEXT_MUTED} sx={{ mt: 1 }}>
+                            {ticket.description}
+                          </Typography>
+                          <Box
+                            sx={{ display: "flex", gap: 2, mt: 1, flexWrap: "wrap", fontSize: 12, color: TEXT_MUTED }}
+                          >
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                              <Ticket size={12} /> {ticket.id}
+                            </Box>
+                            <Box>Requester: {ticket.requester}</Box>
+                            <Box>Dept: {ticket.department}</Box>
+                            <Box>Source: {ticket.source}</Box>
+                            <Box>Category: {ticket.category}</Box>
+                          </Box>
+                        </Box>
+                        <Box sx={{ textAlign: "right", ml: 2, flexShrink: 0 }}>
+                          <Typography fontSize={12} color={TEXT_MUTED}>Due: {formatDate(ticket.dueDate)}</Typography>
+                          {isOverdue(ticket.dueDate) && (
+                            <Badge sx={{ mt: 0.5, bgcolor: "#450a0a", color: "#fca5a5", borderRadius: '12px', px: 1, fontSize: '0.7rem' }}>Overdue</Badge>
+                          )}
+                          <Typography fontSize={10} color={TEXT_MUTED} sx={{ mt: 0.5 }}>
+                            Assigned: {formatDate(ticket.assignedAt)}
+                          </Typography>
                         </Box>
                       </Box>
-                      <Box sx={{ textAlign: "right", ml: 2 }}>
-                        <Typography fontSize={12} color="#9ca3af">Due: {formatDate(ticket.dueDate)}</Typography>
-                        {isOverdue(ticket.dueDate) && (
-                          <Badge sx={{ mt: 0.5, bgcolor: "#450a0a", color: "#fca5a5", borderRadius: '12px', px: 1, fontSize: '0.7rem' }}>Overdue</Badge>
-                        )}
-                        <Typography fontSize={10} color="#9ca3af" sx={{ mt: 0.5 }}>
-                          Assigned: {formatDate(ticket.assignedAt)}
-                        </Typography>
+                      <Box sx={{ display: "flex", gap: 1, mt: 2, flexWrap: "wrap" }}>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          sx={{ 
+                            background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`, 
+                            color: "black", 
+                            borderRadius: '12px',
+                            fontWeight: 'bold',
+                            '&:hover': {
+                              opacity: 0.9,
+                            }
+                          }}
+                        >
+                          Update Status
+                        </Button>
+                        <Button 
+                            size="small" 
+                            variant="outlined" 
+                            sx={{ 
+                              borderColor: ACCENT_COLOR, 
+                              color: ACCENT_COLOR, 
+                              borderRadius: '12px',
+                              '&:hover': {
+                                bgcolor: CARD_HOVER_BG,
+                                borderColor: ACCENT_HOVER_COLOR,
+                              }
+                            }}
+                        >
+                          Add Comment
+                        </Button>
+                        <Button 
+                            size="small" 
+                            variant="outlined" 
+                            sx={{ 
+                              borderColor: ACCENT_COLOR, 
+                              color: ACCENT_COLOR, 
+                              borderRadius: '12px',
+                              '&:hover': {
+                                bgcolor: CARD_HOVER_BG,
+                                borderColor: ACCENT_HOVER_COLOR,
+                              }
+                            }}
+                        >
+                          View Details
+                        </Button>
                       </Box>
-                    </Box>
-                    <Box sx={{ display: "flex", gap: 1, mt: 2, flexWrap: "wrap" }}>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        sx={{ background: "linear-gradient(to right, #34d399, #10b981)", color: "black", borderRadius: '12px' }}
-                      >
-                        Update Status
-                      </Button>
-                      <Button size="small" variant="outlined" sx={{ borderColor: "#10b981", color: "#10b981", borderRadius: '12px' }}>
-                        Add Comment
-                      </Button>
-                      <Button size="small" variant="outlined" sx={{ borderColor: "#10b981", color: "#10b981", borderRadius: '12px' }}>
-                        View Details
-                      </Button>
-                    </Box>
-                  </Card>
-                ))}
+                    </Card>
+                  ))
+                ) : (
+                    <Typography color={TEXT_MUTED} sx={{ p: 2, textAlign: 'center' }}>
+                      No tickets found matching your criteria.
+                    </Typography>
+                )}
               </Box>
             </CardContent>
           </Card>

@@ -55,14 +55,7 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
+  
   // --- AI Response Logic (kept as is) ---
   const generateAIResponse = (userMessage) => {
     const lowerMessage = userMessage.toLowerCase();

@@ -3,16 +3,15 @@ import {
     Box, Typography, IconButton, Avatar, Divider, useMediaQuery, useTheme, Paper,
     Container, Grid, Card, CardContent, CardHeader, Button, List, ListItem, ListItemButton,
     ListItemIcon, ListItemText, Fab, TextField, Drawer, Chip, InputAdornment, Link as MuiLink,
-    CircularProgress // Logic ke liye import kiya gaya
+    CircularProgress
 } from '@mui/material';
 import { useNavigate, useLocation } from "react-router-dom";
-import { toast } from "react-hot-toast"; // Logic ke liye import kiya gaya
+import { toast } from "react-hot-toast";
 
-// --- Standard Material UI Icons ---
-import SmartToyIcon from '@mui/icons-material/SmartToy';
+// --- Icon Imports ---
+import { Bot } from 'lucide-react';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import ChatIcon from '@mui/icons-material/Chat';
 import BookIcon from '@mui/icons-material/Book';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -26,7 +25,7 @@ import SendIcon from '@mui/icons-material/Send';
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import Add from "@mui/icons-material/Add";
 import Search from "@mui/icons-material/Search";
-import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import ChatIcon from '@mui/icons-material/Chat';
 
 // --- Configuration & THEME ---
 const DRAWER_WIDTH = 250;
@@ -43,13 +42,13 @@ const MAX_CONTENT_WIDTH = 1400;
 const CARD_GLOW_SHADOW = `0 15px 30px 0 rgba(16, 185, 129, 0.2)`;
 const BUTTON_GLOW_SHADOW = `0 0 20px rgba(16, 185, 129, 0.4)`;
 
-// --- Mock Data (for UI) ---
+// --- Mock Data ---
 const navigation = [
     { name: "Dashboard", href: "/employeeDashboard", icon: DashboardIcon },
     { name: "My Tickets", href: "/employeeDashboardTicket", icon: AssignmentIcon },
-    { name: "AI Assistant", href: "/employeeDashboardAIAssistant", icon: ChatIcon },
+    { name: "AI Assistant", href: "/employeeDashboardAIAssistant", icon: Bot },
     { name: "Knowledge Base", href: "/employeeDashboardKnowledge", icon: BookIcon },
-    { name: "CREATE TICKET", href: "/newtickets", icon: BookIcon },
+    { name: "Create Ticket", href: "/newtickets", icon: BookIcon },
 ];
 
 const statsData = [
@@ -65,7 +64,6 @@ const mockAllTickets = [
     { id: "TKT-1232", ticketNumber: "TKT-1232", title: "Software Installation", description: "Need AutoCAD 2024 installed.", category: "software", source: "email", priority: "Low", status: "In Progress", createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), tags: ["software"], created: "1 day ago" },
 ];
 const recentTickets = mockAllTickets.slice(0, 3);
-
 
 // --- Helper Functions ---
 const getPriorityStyles = (priority) => {
@@ -121,9 +119,9 @@ function EmployeeTicketPage() {
                           sx={{ background: ACCENT_COLOR, color: 'black', fontWeight: 'bold', borderRadius: 2, py: 1.5 }}
                       >Create New Ticket</Button>
                   </Grid>
-              </Grid>
+             </Grid>
 
-              <Card sx={{ bgcolor: DARK_CARD_COLOR, border: "1px solid rgba(52, 211, 153, 0.15)", borderRadius: 3, mb: 4, p: 1.5 }}>
+             <Card sx={{ bgcolor: DARK_CARD_COLOR, border: "1px solid rgba(52, 211, 153, 0.15)", borderRadius: 3, mb: 4, p: 1.5 }}>
                   <CardContent sx={{ p: 0 }}>
                       <TextField
                           fullWidth placeholder="Search by title or ticket number..." variant="outlined"
@@ -142,9 +140,9 @@ function EmployeeTicketPage() {
                           }}
                       />
                   </CardContent>
-              </Card>
+             </Card>
 
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 3, pb: 4 }}>
+             <Box sx={{ display: "flex", flexDirection: "column", gap: 3, pb: 4 }}>
                   {filteredTickets.length > 0 ? (
                       filteredTickets.map((ticket, index) => (
                           <Card key={ticket.id} sx={{ bgcolor: DARK_CARD_COLOR, color: "white", border: "1px solid rgba(52, 211, 153, 0.15)", borderRadius: 3, cursor: "pointer", '&:hover': { transform: "translateY(-4px)", boxShadow: CARD_GLOW_SHADOW }}}>
@@ -161,13 +159,12 @@ function EmployeeTicketPage() {
                   ) : (
                       <Paper sx={{ p: 4, textAlign: "center", bgcolor: CARD_BG_COLOR }}><Typography color={TEXT_MUTED}>No tickets found.</Typography></Paper>
                   )}
-              </Box>
+             </Box>
         </Box>
     );
 }
 
 function AIChatWidget() {
-    // ... (AIChatWidget implementation as provided) ...
     const [isOpen, setIsOpen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
     const [messages, setMessages] = useState([
@@ -197,14 +194,13 @@ function AIChatWidget() {
                 sx={{
                     position: 'fixed', bottom: 24, right: 24, zIndex: 1500,
                     bgcolor: ACCENT_COLOR, color: 'black', boxShadow: BUTTON_GLOW_SHADOW,
-                    transition: 'box-shadow 0.3s, transform 0.3s',
+                    animation: 'fabPulse 2.5s infinite ease-in-out', // Animation for the FAB
                     '&:hover': {
                         bgcolor: ACCENT_HOVER_COLOR,
-                        boxShadow: `0 0 40px 0 rgba(16, 185, 129, 0.8)`,
                         transform: 'scale(1.05)',
                     }
                 }}>
-                <SmartToyIcon />
+                <Bot size={28} color="black" strokeWidth={2} style={{ animation: 'fabIconFloat 3s infinite ease-in-out' }}/>
             </Fab>
         );
     }
@@ -305,20 +301,56 @@ function SidebarContent({ navigate }) {
         <Box
             sx={{
                 width: DRAWER_WIDTH, flexShrink: 0, bgcolor: SIDEBAR_COLOR, color: 'white',
-                height: '100%', display: 'flex', flexDirection: 'column', pt: 2,
+                height: '100%', display: 'flex', flexDirection: 'column',
             }}
         >
-            <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <SmartToyIcon sx={{ color: ACCENT_COLOR, fontSize: 30 }} />
-                <Typography variant="h6" fontWeight="bold">POWERGRID IT</Typography>
+            <Box
+                sx={{
+                    height: 64,
+                    borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
+                    px: 3,
+                    display: "flex",
+                    alignItems: "center",
+                    bgcolor: DARK_CARD_COLOR,
+                }}
+            >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box sx={{
+                        position: 'relative',
+                        width: 40,
+                        height: 40,
+                        borderRadius: '50%',
+                        bgcolor: ACCENT_COLOR,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        animation: 'pulse 2s ease-in-out infinite',
+                    }}>
+                        <Box sx={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '50%',
+                            background: 'rgba(255, 255, 255, 0.2)',
+                            backdropFilter: 'blur(2px)',
+                        }} />
+                        <Bot size={24} color="#000000" strokeWidth={2.5} style={{ 
+                            position: 'relative', 
+                            zIndex: 10,
+                            animation: 'float 3s ease-in-out infinite'
+                        }} />
+                    </Box>
+                    <Typography variant="h6" fontWeight="bold" color="white">
+                        POWERGRID
+                    </Typography>
+                </Box>
             </Box>
 
-            <Divider sx={{ mb: 2, bgcolor: '#333' }} />
-
-            <List sx={{ px: 1, flexGrow: 1 }}>
+            <List sx={{ px: 1, flexGrow: 1, mt: 1 }}>
                 {navigation.map((item) => {
                     const Icon = item.icon;
                     const isActive = isActiveLink(item.href);
+                    const iconColor = isActive ? 'black' : TEXT_MUTED;
 
                     return (
                         <ListItem key={item.href} disablePadding sx={{ mb: 0.5 }}>
@@ -343,7 +375,11 @@ function SidebarContent({ navigate }) {
                                         alignItems: 'center', justifyContent: 'center',
                                         bgcolor: isActive ? ACCENT_COLOR : 'transparent', mr: 1
                                     }}>
-                                        <Icon sx={{ color: isActive ? 'black' : TEXT_MUTED }} />
+                                        {item.name === "AI Assistant" ? (
+                                            <Icon color={iconColor} size={22} strokeWidth={2}/>
+                                        ) : (
+                                            <Icon sx={{ color: iconColor }} />
+                                        )}
                                     </Box>
                                 </ListItemIcon>
                                 <ListItemText primary={item.name} primaryTypographyProps={{ fontWeight: isActive ? 'bold' : 'medium' }} />
@@ -482,11 +518,9 @@ export default function EmployeeDashboard() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // State for user is initialized to null
     const [user, setUser] = useState(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Effect to check for user in localStorage on component mount
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
@@ -528,7 +562,6 @@ export default function EmployeeDashboard() {
         }
     };
 
-    // Loading state: Show a spinner while user is being verified
     if (!user) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: MAIN_BG_COLOR }}>
@@ -537,9 +570,36 @@ export default function EmployeeDashboard() {
         );
     }
 
-    // --- Main Layout Render ---
     return (
         <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: MAIN_BG_COLOR, color: 'white', overflowX: 'hidden' }}>
+            {/* --- ADDED STYLE TAG FOR ANIMATIONS --- */}
+            <style>{`
+                @keyframes pulse {
+                    0%, 100% {
+                        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+                    }
+                    50% {
+                        box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+                    }
+                }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-3px); }
+                }
+                @keyframes fabPulse {
+                    0%, 100% {
+                        box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+                    }
+                    50% {
+                        box-shadow: 0 0 35px 10px rgba(16, 185, 129, 0.5);
+                    }
+                }
+                @keyframes fabIconFloat {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-4px); }
+                }
+            `}</style>
+
             <Sidebar
                 navigate={navigate}
                 isDesktop={isDesktop}

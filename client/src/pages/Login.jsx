@@ -13,13 +13,13 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
-  Link, // Import Link for the forgot password feature
+  Link,
 } from "@mui/material";
 import { Bot, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-// --- Theme Styles Mapping (No changes here) ---
+// --- Theme Styles Mapping ---
 const themeStyles = {
   container: {
     height: "100vh",
@@ -86,6 +86,12 @@ const themeStyles = {
     boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)',
     overflow: 'hidden',
     position: 'relative',
+    animation: 'logoPulse 2s ease-in-out infinite', // Animation for the container
+  },
+  logoBotIcon: {
+    position: 'relative',
+    zIndex: 10,
+    animation: 'float 3s ease-in-out infinite', // Animation for the bot icon itself
   },
   titleText: {
     fontWeight: 800,
@@ -193,6 +199,27 @@ export default function LoginPage() {
           0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
           50% { transform: translateY(-20px) scale(1.1); opacity: 0.6; }
         }
+        
+        /* --- NEW ANIMATIONS ADDED HERE --- */
+        @keyframes logoPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7), 0 0 20px rgba(16, 185, 129, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0), 0 0 20px rgba(16, 185, 129, 0.5);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+        /* --- END OF NEW ANIMATIONS --- */
+
         .MuiFormLabel-root { color: #9ca3af !important; }
         .MuiInputLabel-shrink { color: #34d399 !important; }
       `}</style>
@@ -203,7 +230,8 @@ export default function LoginPage() {
       <Box sx={{ width: "100%", maxWidth: 400, position: 'relative', zIndex: 10 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Box sx={themeStyles.logoIconContainer}>
-            <Bot size={24} color="black" strokeWidth={2.5} style={{ position: 'relative', zIndex: 10 }} />
+            {/* --- UPDATED BOT ICON WITH NEW STYLE --- */}
+            <Bot size={24} color="black" strokeWidth={2.5} style={themeStyles.logoBotIcon} />
           </Box>
           <Typography variant="h4" sx={themeStyles.titleText}>
             POWERGRID IT Support
@@ -258,7 +286,7 @@ export default function LoginPage() {
                       "& .MuiSelect-icon": { color: "#34d399" },
                     }}
                   >
-                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="admin">IT Support</MenuItem>
                     <MenuItem value="employee">Employee</MenuItem>
                   </Select>
                 </FormControl>

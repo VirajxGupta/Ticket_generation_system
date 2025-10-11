@@ -3,7 +3,7 @@ import { Bot, Zap, Shield, BarChart3, BookOpen, Bell } from "lucide-react";
 
 export default function LandingPage() {
   const [visibleCards, setVisibleCards] = React.useState([]);
-  
+
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -73,11 +73,11 @@ export default function LandingPage() {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     },
     backgroundGradient: {
-  position: 'absolute',
-  inset: 0,
-  background: 'radial-gradient(ellipse at top, rgba(6, 78, 59, 0.3) 0%, rgba(0, 0, 0, 1) 50%), radial-gradient(ellipse at bottom, rgba(4, 47, 46, 0.2) 0%, rgba(0, 0, 0, 1) 50%), linear-gradient(to bottom, #000000, #0a0f0a, #000000)',
-  pointerEvents: 'none',
-},
+      position: 'absolute',
+      inset: 0,
+      background: 'radial-gradient(ellipse at top, rgba(6, 78, 59, 0.3) 0%, rgba(0, 0, 0, 1) 50%), radial-gradient(ellipse at bottom, rgba(4, 47, 46, 0.2) 0%, rgba(0, 0, 0, 1) 50%), linear-gradient(to bottom, #000000, #0a0f0a, #000000)',
+      pointerEvents: 'none',
+    },
     floatingOrb1: {
       position: 'absolute',
       top: '5rem',
@@ -132,7 +132,6 @@ export default function LandingPage() {
       pointerEvents: 'none',
       animation: 'gridPulse 3s ease-in-out infinite',
     },
-    
     header: {
       position: 'fixed',
       top: 0,
@@ -172,6 +171,12 @@ export default function LandingPage() {
       boxShadow: '0 0 30px rgba(16, 185, 129, 0.4)',
       position: 'relative',
       overflow: 'hidden',
+      animation: 'logoPulse 2s ease-in-out infinite',
+    },
+    logoBot: {
+      position: 'relative',
+      zIndex: 10,
+      animation: 'float 3s ease-in-out infinite',
     },
     logoIconOverlay: {
       position: 'absolute',
@@ -274,6 +279,13 @@ export default function LandingPage() {
       boxShadow: '0 0 30px rgba(16, 185, 129, 0.3), inset 0 0 30px rgba(16, 185, 129, 0.1)',
       backdropFilter: 'none',
       overflow: 'hidden',
+      animation: 'heroIconPulse 2.5s ease-in-out infinite',
+    },
+    heroBotIcon: {
+      position: 'relative',
+      zIndex: 10,
+      filter: 'drop-shadow(0 0 10px #10b981)',
+      animation: 'heroFloat 3.5s ease-in-out infinite',
     },
     gridPatternOverlay: {
       position: 'absolute',
@@ -546,49 +558,57 @@ export default function LandingPage() {
             opacity: 0.6;
           }
         }
+        
+        /* --- HEADER ICON ANIMATIONS --- */
+        @keyframes logoPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7), 0 0 30px rgba(16, 185, 129, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0), 0 0 30px rgba(16, 185, 129, 0.4);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* --- HERO ICON ANIMATIONS --- */
+        @keyframes heroIconPulse {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(16, 185, 129, 0.3), inset 0 0 30px rgba(16, 185, 129, 0.1), 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(16, 185, 129, 0.3), inset 0 0 30px rgba(16, 185, 129, 0.1), 0 0 0 15px rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
 
         @keyframes gridPulse {
-          0%, 100% {
-            opacity: 0.05;
-          }
-          50% {
-            opacity: 0.15;
-          }
+          0%, 100% { opacity: 0.05; }
+          50% { opacity: 0.15; }
         }
 
         @keyframes pulse {
-          0%, 100% {
-            opacity: 0.4;
-          }
-          50% {
-            opacity: 0.8;
-          }
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.8; }
         }
 
         @keyframes electricFlow {
-          0% {
-            stroke-dashoffset: 1000;
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 1;
-          }
-          100% {
-            stroke-dashoffset: 0;
-            opacity: 0;
-          }
+          0% { stroke-dashoffset: 1000; opacity: 0; }
+          10% { opacity: 1; }
+          50% { opacity: 1; }
+          100% { stroke-dashoffset: 0; opacity: 0; }
         }
 
         @keyframes electricGlow {
-          0%, 100% {
-            filter: drop-shadow(0 0 2px #00ff88) drop-shadow(0 0 4px #00ff88);
-          }
-          50% {
-            filter: drop-shadow(0 0 6px #00ff88) drop-shadow(0 0 12px #00ff88) drop-shadow(0 0 16px #00ff88);
-          }
+          0%, 100% { filter: drop-shadow(0 0 2px #00ff88) drop-shadow(0 0 4px #00ff88); }
+          50% { filter: drop-shadow(0 0 6px #00ff88) drop-shadow(0 0 12px #00ff88) drop-shadow(0 0 16px #00ff88); }
         }
 
         .electric-line {
@@ -601,25 +621,12 @@ export default function LandingPage() {
           filter: drop-shadow(0 0 4px #00ff88);
         }
 
-        .electric-line-1 {
-          animation-delay: 0s;
-        }
+        .electric-line-1 { animation-delay: 0s; }
+        .electric-line-2 { animation-delay: 0.5s; }
+        .electric-line-3 { animation-delay: 1s; }
+        .electric-particle { animation: electricGlow 2s ease-in-out infinite; }
 
-        .electric-line-2 {
-          animation-delay: 0.5s;
-        }
-
-        .electric-line-3 {
-          animation-delay: 1s;
-        }
-
-        .electric-particle {
-          animation: electricGlow 2s ease-in-out infinite;
-        }
-
-        a:hover {
-          transform: translateY(-2px);
-        }
+        a:hover { transform: translateY(-2px); }
 
         .feature-card:hover {
           transform: translateY(-8px);
@@ -628,22 +635,14 @@ export default function LandingPage() {
           box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.2);
         }
 
-        .feature-card:hover .feature-top-border {
-          opacity: 1;
-        }
-
-        .feature-card:hover .feature-inner-glow {
-          opacity: 1;
-        }
-
+        .feature-card:hover .feature-top-border { opacity: 1; }
+        .feature-card:hover .feature-inner-glow { opacity: 1; }
         .feature-card:hover .feature-icon {
           border-color: rgba(16, 185, 129, 0.5);
           box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
         }
 
-        .login-link:hover {
-          color: #34d399;
-        }
+        .login-link:hover { color: #34d399; }
 
         .get-started-btn:hover {
           transform: translateY(-2px);
@@ -665,27 +664,17 @@ export default function LandingPage() {
         }
 
         @media (min-width: 768px) {
-          .h1-responsive {
-            font-size: 4.5rem !important;
-          }
-          .cta-h2-responsive {
-            font-size: 3rem !important;
-          }
+          .h1-responsive { font-size: 4.5rem !important; }
+          .cta-h2-responsive { font-size: 3rem !important; }
         }
 
         @media (max-width: 1024px) {
-          .features-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
+          .features-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
 
         @media (max-width: 640px) {
-          .features-grid {
-            grid-template-columns: 1fr !important;
-          }
+          .features-grid { grid-template-columns: 1fr !important; }
         }
-
-        
       `}</style>
 
       {/* Background Elements */}
@@ -693,7 +682,7 @@ export default function LandingPage() {
       <div style={styles.floatingOrb1} />
       <div style={styles.floatingOrb2} />
       <div style={styles.floatingOrb3} />
-      
+
       <svg style={styles.backgroundLines}>
         <defs>
           <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -706,28 +695,27 @@ export default function LandingPage() {
         <path d="M 0 500 Q 600 400 1200 500 T 2400 500" stroke="url(#lineGradient)" strokeWidth="1" fill="none" />
         <path d="M 0 700 Q 300 600 600 700 T 1200 700" stroke="url(#lineGradient)" strokeWidth="1" fill="none" />
       </svg>
-      
+
       <div style={styles.gridBackground} />
 
       {/* Header */}
-<header style={styles.header} className="frosted-navbar">
-  <div style={styles.headerContainer}>
-    <div style={styles.headerContent}>
-      <div style={styles.logo}>
-        <div style={styles.logoIcon}>
-          <div style={styles.logoIconOverlay} />
-          <Bot size={24} color="#000000" strokeWidth={2.5} style={{ position: 'relative', zIndex: 10 }} />
+      <header style={styles.header} className="frosted-navbar">
+        <div style={styles.headerContainer}>
+          <div style={styles.headerContent}>
+            <div style={styles.logo}>
+              <div style={styles.logoIcon}>
+                <div style={styles.logoIconOverlay} />
+                <Bot size={24} color="#000000" strokeWidth={2.5} style={styles.logoBot} />
+              </div>
+              <span style={styles.logoText}>POWERGRID</span>
+            </div>
+            <nav style={styles.nav}>
+              <a href="/login" style={styles.loginLink} className="login-link">Log In</a>
+              <a href="/signup" style={styles.getStartedBtn} className="get-started-btn">Get Started</a>
+            </nav>
+          </div>
         </div>
-        <span style={styles.logoText}>POWERGRID</span>
-      </div>
-      <nav style={styles.nav}>
-        <a href="/login" style={styles.loginLink} className="login-link">Log In</a>
-        <a href="/signup" style={styles.getStartedBtn} className="get-started-btn">Get Started</a>
-      </nav>
-    </div>
-  </div>
-</header>
-
+      </header>
 
       {/* Hero Section */}
       <section style={styles.heroSection}>
@@ -737,40 +725,28 @@ export default function LandingPage() {
             <div style={styles.lockIconLeft} className="lock-icon">
               <Shield size={20} color="#10b981" strokeWidth={2} />
             </div>
-            <div style={{...styles.lockIconRight, animationDelay: '1s'}} className="lock-icon">
+            <div style={{ ...styles.lockIconRight, animationDelay: '1s' }} className="lock-icon">
               <Shield size={20} color="#10b981" strokeWidth={2} />
             </div>
 
             <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }} viewBox="0 0 800 250">
-              {/* Multiple vertical lines from top */}
+              {/* Lines and particles remain unchanged */}
               <path className="electric-line electric-line-1" d="M 380 0 L 380 115" />
               <path className="electric-line electric-line-2" d="M 400 0 L 400 115" style={{ animationDelay: '0.1s' }} />
               <path className="electric-line electric-line-3" d="M 420 0 L 420 115" style={{ animationDelay: '0.2s' }} />
-              
-              {/* Horizontal lines from center to left lock */}
               <path className="electric-line electric-line-1" d="M 380 125 L 80 125" style={{ animationDelay: '0.8s' }} />
               <path className="electric-line electric-line-2" d="M 380 130 L 80 130" style={{ animationDelay: '0.9s' }} />
               <path className="electric-line electric-line-3" d="M 380 135 L 80 135" style={{ animationDelay: '1s' }} />
-              
-              {/* Horizontal lines from center to right lock */}
               <path className="electric-line electric-line-1" d="M 420 125 L 720 125" style={{ animationDelay: '0.8s' }} />
               <path className="electric-line electric-line-2" d="M 420 130 L 720 130" style={{ animationDelay: '0.9s' }} />
               <path className="electric-line electric-line-3" d="M 420 135 L 720 135" style={{ animationDelay: '1s' }} />
-              
-              {/* Multiple vertical lines from center down */}
               <path className="electric-line electric-line-1" d="M 380 135 L 380 180" style={{ animationDelay: '1.6s' }} />
               <path className="electric-line electric-line-2" d="M 400 135 L 400 180" style={{ animationDelay: '1.7s' }} />
               <path className="electric-line electric-line-3" d="M 420 135 L 420 180" style={{ animationDelay: '1.8s' }} />
-              
-              {/* Horizontal lines spreading from bottom left */}
               <path className="electric-line electric-line-1" d="M 380 180 L 150 180" style={{ animationDelay: '2s' }} />
               <path className="electric-line electric-line-2" d="M 380 185 L 150 185" style={{ animationDelay: '2.1s' }} />
-              
-              {/* Horizontal lines spreading from bottom right */}
               <path className="electric-line electric-line-3" d="M 420 180 L 650 180" style={{ animationDelay: '2s' }} />
               <path className="electric-line electric-line-1" d="M 420 185 L 650 185" style={{ animationDelay: '2.1s' }} />
-              
-              {/* Electric particles */}
               <circle className="electric-particle" cx="390" cy="20" r="2" fill="#10b981" />
               <circle className="electric-particle" cx="410" cy="25" r="2" fill="#10b981" style={{ animationDelay: '0.1s' }} />
               <circle className="electric-particle" cx="80" cy="130" r="2" fill="#10b981" style={{ animationDelay: '0.9s' }} />
@@ -783,17 +759,18 @@ export default function LandingPage() {
               <div style={styles.gridPatternOverlay} className="grid-pattern" />
               <div style={styles.botIconGlow} />
               <div style={styles.botIconBorder} />
-              <Bot size={72} color="#10b981" strokeWidth={2.5} style={{ position: 'relative', zIndex: 10, filter: 'drop-shadow(0 0 10px #10b981)' }} />
-              <div style={{...styles.connectionPoint, ...styles.connectionPointTop}} />
-              <div style={{...styles.connectionPoint, ...styles.connectionPointBottomLeft}} />
-              <div style={{...styles.connectionPoint, ...styles.connectionPointBottomRight}} />
+              {/* --- UPDATED HERO BOT ICON WITH NEW STYLE --- */}
+              <Bot size={72} color="#10b981" strokeWidth={2.5} style={styles.heroBotIcon} />
+              <div style={{ ...styles.connectionPoint, ...styles.connectionPointTop }} />
+              <div style={{ ...styles.connectionPoint, ...styles.connectionPointBottomLeft }} />
+              <div style={{ ...styles.connectionPoint, ...styles.connectionPointBottomRight }} />
             </div>
           </div>
 
           <h1 style={styles.h1} className="h1-responsive">
             Unified AI-Powered IT Support for POWERGRID
           </h1>
-          
+
           <p style={styles.subtitle}>
             One platform to consolidate all your IT tickets from GLPI, Solman, and email. Get instant resolutions with
             AI-powered automation and intelligent routing.
@@ -824,7 +801,7 @@ export default function LandingPage() {
                 <div key={i} style={styles.featureCard} className="feature-card">
                   <div style={styles.featureTopBorder} className="feature-top-border" />
                   <div style={styles.featureInnerGlow} className="feature-inner-glow" />
-                  
+
                   <div style={styles.featureHeader}>
                     <div style={styles.featureIcon} className="feature-icon">
                       <Icon size={28} color="#34d399" strokeWidth={2} />
@@ -847,7 +824,7 @@ export default function LandingPage() {
           <div style={styles.ctaBox} className="animate-on-scroll cta-animate from-left">
             <div style={styles.ctaGlow} />
             <div style={styles.ctaGradient} />
-            
+
             <div style={styles.ctaContent}>
               <h2 style={styles.ctaH2} className="cta-h2-responsive">
                 Ready to Transform Your IT Support?

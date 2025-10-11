@@ -40,7 +40,7 @@ export default function StatsCards() {
           <Grid item xs={12} sm={6} md={3} key={stat.title}>
             <Card
               sx={{
-                bgcolor: "#000",
+                bgcolor: "#11182780",
                 color: "#fff",
                 border: "1px solid rgba(255,255,255,0.1)",
                 borderRadius: 3,
@@ -71,7 +71,7 @@ export default function StatsCards() {
                       fontWeight="bold"
                       sx={{
                         mt: 1,
-                        background: "linear-gradient(to right, #34d399, #10b981)",
+                        background: "linear-gradient(to right, #ffffffff, #f9fdfcff)",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                       }}
@@ -82,7 +82,7 @@ export default function StatsCards() {
                       variant="caption"
                       sx={{
                         mt: 0.5,
-                        color: isPositive ? "#34d399" : "#f87171",
+                        color: isPositive ? "#34d399" : "#ab0000d6",
                       }}
                     >
                       {stat.change} from last week
@@ -102,7 +102,7 @@ export default function StatsCards() {
                       boxShadow: "0 0 10px rgba(52,211,153,0.4)",
                     }}
                   >
-                    <Icon size={24} color="#fff" />
+                    <Icon size={24} color="#050505ff" />
                   </Avatar>
                 </Box>
               </CardContent>

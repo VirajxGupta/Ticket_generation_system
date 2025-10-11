@@ -30,7 +30,6 @@ import {
   Users,
   Bot,
   BookOpen,
-  Bell,
   Menu,
   X,
   TrendingUp,
@@ -38,6 +37,17 @@ import {
   LogOut,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+
+// --- THEME CONSTANTS ---
+const MAIN_BG_COLOR = '#000000';
+const SIDEBAR_COLOR = '#030712';
+const ACCENT_COLOR = '#34d399';
+const ACCENT_HOVER_COLOR = '#10b981';
+const TEXT_MUTED = '#9ca3af';
+const DARK_CARD_COLOR = 'rgba(3, 7, 18, 0.6)';
+const CARD_BG_COLOR = 'rgba(17, 24, 39, 0.8)';
+const CARD_HOVER_BG = 'rgba(52, 211, 153, 0.05)';
+// ----------------------------------------------------------------------
 
 export default function AIClassificationPage() {
   const [title, setTitle] = useState("");
@@ -53,7 +63,6 @@ export default function AIClassificationPage() {
     setLoading(true);
     setResult(null);
 
-    // Mock API response
     setTimeout(() => {
       setResult({
         classification: {
@@ -76,10 +85,10 @@ export default function AIClassificationPage() {
   };
 
   const priorityColors = {
-    low: { bgcolor: "#ECFDF5", color: "#16A34A" },
-    medium: { bgcolor: "#FEF9C3", color: "#CA8A04" },
-    high: { bgcolor: "#FED7AA", color: "#C2410C" },
-    critical: { bgcolor: "#FECACA", color: "#991B1B" },
+    low: { bgcolor: "#064e3b", color: "#6ee7b7" },
+    medium: { bgcolor: "#78350f", color: "#fcd34d" },
+    high: { bgcolor: "#7c2d12", color: "#fdba74" },
+    critical: { bgcolor: "#450a0a", color: "#fca5a5" },
   };
 
   const sidebarItems = [
@@ -89,57 +98,98 @@ export default function AIClassificationPage() {
     { href: "/classify", icon: Sparkles, label: "AI Classification" },
     { href: "/knowledgebase", icon: BookOpen, label: "Knowledge Base" },
     { href: "/analytics", icon: TrendingUp, label: "Analytics" },
-    { href: "/settings", icon: Settings, label: "Settings" },
   ];
 
   const SidebarContent = (
-    <Box sx={{ width: 256, bgcolor: "#1a1a1a", height: "100%", display: "flex", flexDirection: "column" }}>
-      {/* Top section: Header and main navigation */}
+    <Box sx={{ width: 256, bgcolor: SIDEBAR_COLOR, height: "100%", display: 'flex', flexDirection: 'column', color: 'white' }}>
       <Box>
         <Box
           sx={{
             height: 64,
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
             px: 3,
             display: "flex",
             alignItems: "center",
-            gap: 1,
+            bgcolor: DARK_CARD_COLOR,
           }}
         >
-          <Avatar
-            sx={{
-              bgcolor: "transparent",
-              background: "linear-gradient(to right, #34d399, #10b981)",
-              width: 32,
-              height: 32,
-            }}
-          >
-            <Ticket size={16} color="#fff" />
-          </Avatar>
-          <Typography variant="subtitle1" fontWeight={600} color="#fff">
-            POWERGRID IT
-          </Typography>
+          {/* --- LOGO UPDATED HERE --- */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{
+                  position: 'relative',
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  bgcolor: ACCENT_COLOR,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  animation: 'logoPulse 2s ease-in-out infinite' // Pulse animation
+              }}>
+                  <Box sx={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      backdropFilter: 'blur(2px)',
+                  }} />
+                  <Bot 
+                    size={24} 
+                    color="#000000" 
+                    strokeWidth={2.5} 
+                    style={{ 
+                      position: 'relative', 
+                      zIndex: 10,
+                      animation: 'float 3s ease-in-out infinite' // Float animation
+                    }} 
+                  />
+              </Box>
+              <Typography variant="h6" fontWeight="bold" color="white">
+                  POWERGRID
+              </Typography>
+          </Box>
+          {/* --- END OF LOGO UPDATE --- */}
         </Box>
 
         <List sx={{ p: 1 }}>
           {sidebarItems.map((item) => (
-            <ListItem key={item.href} disablePadding>
+            <ListItem key={item.label} disablePadding>
               <ListItemButton
                 component={Link}
                 to={item.href}
+                selected={item.label === "AI Classification"}
                 sx={{
-                  color: "#fff",
-                  borderRadius: 1.5,
+                  borderRadius: 2,
+                  color: 'white',
+                  py: 1.5,
+                  "&.Mui-selected": {
+                    background: CARD_HOVER_BG,
+                    color: ACCENT_COLOR,
+                    "& .MuiListItemIcon-root": {
+                      color: ACCENT_COLOR,
+                    }
+                  },
                   "&:hover": {
-                    background: "linear-gradient(to right, #34d39922, #10b98122)",
+                    background: CARD_HOVER_BG,
+                    color: ACCENT_COLOR,
+                    "& .MuiListItemIcon-root": {
+                      color: ACCENT_COLOR,
+                    }
                   },
                 }}
               >
-                <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
-                  <item.icon size={18} />
+                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                  <Box sx={{ width: 32, height: 32, borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                    <item.icon size={18} color={item.label === "AI Classification" ? ACCENT_COLOR : TEXT_MUTED} />
+                  </Box>
                 </ListItemIcon>
                 <ListItemText
-                  primary={<Typography variant="body2">{item.label}</Typography>}
+                  primary={
+                    <Typography variant="body2" color="inherit" fontWeight="medium">
+                      {item.label}
+                    </Typography>
+                  }
                 />
               </ListItemButton>
             </ListItem>
@@ -147,27 +197,60 @@ export default function AIClassificationPage() {
         </List>
       </Box>
 
-      {/* Bottom section: Logout button */}
       <Box sx={{ marginTop: 'auto' }}>
-        <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}/>
+        <Divider sx={{ bgcolor: 'rgba(52, 211, 153, 0.2)' }} />
         <List sx={{ p: 1 }}>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/settings"
+              sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED,
+                py: 1.5,
+                "&:hover": {
+                  background: CARD_HOVER_BG,
+                  color: ACCENT_COLOR,
+                  "& .MuiListItemIcon-root": { color: ACCENT_COLOR },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                <Settings size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Settings
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
           <ListItem disablePadding>
             <ListItemButton
               component={Link}
               to="/"
               sx={{
-                color: "#fff",
-                borderRadius: 1.5,
+                borderRadius: 2,
+                color: TEXT_MUTED,
+                py: 1.5,
                 "&:hover": {
-                  background: "linear-gradient(to right, #34d39922, #10b98122)",
+                  background: CARD_HOVER_BG,
+                  color: '#ef4444',
+                  "& .MuiListItemIcon-root": { color: '#ef4444' },
                 },
               }}
             >
-              <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
                 <LogOut size={18} />
               </ListItemIcon>
               <ListItemText
-                primary={<Typography variant="body2">Logout</Typography>}
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Logout
+                  </Typography>
+                }
               />
             </ListItemButton>
           </ListItem>
@@ -177,13 +260,33 @@ export default function AIClassificationPage() {
   );
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", bgcolor: "#0a0a0a", color: "#f8fafc" }}>
+    <Box sx={{ display: "flex", height: "100vh", bgcolor: MAIN_BG_COLOR, color: "white" }}>
+        <style>{`
+            @keyframes logoPulse {
+                0%, 100% {
+                    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+                }
+                50% {
+                    box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+                }
+            }
+
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-3px);
+                }
+            }
+        `}</style>
+
       {/* Sidebar for large screens */}
       <Box
         sx={{
           display: { xs: "none", md: "block" },
           width: 256,
-          borderRight: "1px solid rgba(255,255,255,0.1)",
+          borderRight: `1px solid rgba(52, 211, 153, 0.2)`,
           flexDirection: "column",
         }}
       >
@@ -191,7 +294,7 @@ export default function AIClassificationPage() {
       </Box>
 
       {/* Drawer for mobile */}
-      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: "#1a1a1a" } }}>
+      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: SIDEBAR_COLOR } }}>
         {SidebarContent}
       </Drawer>
 
@@ -201,17 +304,17 @@ export default function AIClassificationPage() {
         <Box
           sx={{
             height: 64,
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
             display: "flex",
             alignItems: "center",
             px: 3,
             justifyContent: "space-between",
-            bgcolor: '#111'
+            bgcolor: MAIN_BG_COLOR
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
-              sx={{ display: { xs: "inline-flex", md: "none" }, color: "#e5e5e5", mr: 1 }}
+              sx={{ display: { xs: "inline-flex", md: "none" }, color: ACCENT_COLOR, mr: 1 }}
               onClick={toggleSidebar}
             >
               {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
@@ -219,9 +322,11 @@ export default function AIClassificationPage() {
 
             <Typography
               variant="h6"
+              fontWeight="bold"
               sx={{
-                fontWeight: 600,
-                color: '#e5e5e5'
+                background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
               }}
             >
               AI Classification
@@ -232,20 +337,20 @@ export default function AIClassificationPage() {
         {/* Scrollable Main Area */}
         <Box sx={{ flex: 1, overflowY: "auto", p: { xs: 2, md: 3 } }}>
           {/* Input Card */}
-          <Card sx={{ bgcolor: "#1a1a1a", mb: 3, border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <Card sx={{ bgcolor: DARK_CARD_COLOR, mb: 3, border: `1px solid rgba(52, 211, 153, 0.15)`, borderRadius: 3 }}>
             <CardHeader
               title={
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Sparkles size={20} color="#34d399" />
-                  <Typography variant="h6" >AI Ticket Analysis</Typography>
+                  <Sparkles size={20} color={ACCENT_COLOR} />
+                  <Typography variant="h6" fontWeight="bold">AI Ticket Analysis</Typography>
                 </Box>
               }
               subheader={
-                <Typography variant="body2" color="#9ca3af" sx={{ mt: 0.5 }}>
+                <Typography variant="body2" color={TEXT_MUTED} sx={{ mt: 0.5 }}>
                   Enter the ticket details to get an AI-powered classification and resolution suggestion.
                 </Typography>
               }
-              sx={{ color: "#f8fafc" }}
+              sx={{ color: "white" }}
             />
             <CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <TextField
@@ -255,15 +360,15 @@ export default function AIClassificationPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 sx={{
-                  // Style the label
-                  '& label': { color: '#9ca3af' },
-                  '& label.Mui-focused': { color: '#34d399' },
-                  // Style the input field
+                  '& label': { color: TEXT_MUTED },
+                  '& label.Mui-focused': { color: ACCENT_COLOR },
                   '& .MuiOutlinedInput-root': {
-                    color: '#f8fafc',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
-                    '&:hover fieldset': { borderColor: '#34d399' },
-                    '&.Mui-focused fieldset': { borderColor: '#34d399' },
+                    bgcolor: MAIN_BG_COLOR,
+                    color: 'white',
+                    borderRadius: 2,
+                    '& fieldset': { borderColor: `rgba(52, 211, 153, 0.2)` },
+                    '&:hover fieldset': { borderColor: ACCENT_COLOR },
+                    '&.Mui-focused fieldset': { borderColor: ACCENT_COLOR, borderWidth: '2px' },
                   },
                 }}
               />
@@ -276,15 +381,15 @@ export default function AIClassificationPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 sx={{
-                  // Style the label
-                  '& label': { color: '#9ca3af' },
-                  '& label.Mui-focused': { color: '#34d399' },
-                  // Style the input field
+                  '& label': { color: TEXT_MUTED },
+                  '& label.Mui-focused': { color: ACCENT_COLOR },
                   '& .MuiOutlinedInput-root': {
-                    color: '#f8fafc',
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
-                    '&:hover fieldset': { borderColor: '#34d399' },
-                    '&.Mui-focused fieldset': { borderColor: '#34d399' },
+                    bgcolor: MAIN_BG_COLOR,
+                    color: 'white',
+                    borderRadius: 2,
+                    '& fieldset': { borderColor: `rgba(52, 211, 153, 0.2)` },
+                    '&:hover fieldset': { borderColor: ACCENT_COLOR },
+                    '&.Mui-focused fieldset': { borderColor: ACCENT_COLOR, borderWidth: '2px' },
                   },
                 }}
               />
@@ -293,20 +398,23 @@ export default function AIClassificationPage() {
                 onClick={handleClassify}
                 disabled={loading || !title || !description}
                 sx={{
-                  background: "linear-gradient(to right, #34d399, #10b981)",
-                  color: "#fff",
-                  fontWeight: 600,
+                  background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
+                  border: `1px solid #676767ff`,
+                  color: "black",
+                  fontWeight: 700,
                   textTransform: "none",
-                  borderRadius: 1.5,
+                  borderRadius: 2,
                   py: 1.5,
-                  boxShadow: "none",
+                  boxShadow: `0 4px 15px 0 ${ACCENT_COLOR}4D`,
                   "&:hover": {
-                    background: "linear-gradient(to right, #34d399, #10b981)",
-                    filter: 'brightness(1.2)'
+                    background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
+                    filter: 'brightness(1.1)',
+                    boxShadow: `0 6px 20px 0 ${ACCENT_COLOR}66`,
                   },
                   "&.Mui-disabled": {
-                    background: "rgba(255, 255, 255, 0.1)",
-                    color: "rgba(255, 255, 255, 0.5)",
+                    background: DARK_CARD_COLOR,
+                    color: TEXT_MUTED,
+                    boxShadow: 'none',
                   },
                 }}
                 startIcon={loading ? <CircularProgress size={16} color="inherit" /> : <Sparkles size={16} />}
@@ -319,10 +427,10 @@ export default function AIClassificationPage() {
 
           {/* Result Card */}
           {result && (
-            <Card sx={{ bgcolor: "#1a1a1a", border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <Card sx={{ bgcolor: DARK_CARD_COLOR, border: `1px solid rgba(52, 211, 153, 0.15)`, borderRadius: 3 }}>
               <CardHeader
-                title={<Typography variant="h6">Classification Results</Typography>}
-                sx={{ color: "#f8fafc" }}
+                title={<Typography variant="h6" fontWeight="bold">Classification Results</Typography>}
+                sx={{ color: "white" }}
               />
               <CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 {result.autoResolve?.resolved && (
@@ -330,12 +438,13 @@ export default function AIClassificationPage() {
                     severity="success"
                     icon={<CheckCircle2 size={18} />}
                     sx={{
-                      bgcolor: 'rgba(52, 211, 153, 0.1)',
-                      color: '#34d399',
-                      border: '1px solid rgba(52, 211, 153, 0.2)'
+                      bgcolor: CARD_HOVER_BG,
+                      color: ACCENT_COLOR,
+                      border: `1px solid ${ACCENT_COLOR}33`,
+                      '& .MuiAlert-icon': { color: ACCENT_COLOR },
                     }}
                   >
-                    <AlertTitle sx={{ fontWeight: 600 }}>Auto-Resolved</AlertTitle>
+                    <AlertTitle sx={{ fontWeight: 700, color: ACCENT_COLOR }}>Auto-Resolved</AlertTitle>
                     {result.autoResolve.resolution}
                   </Alert>
                 )}
@@ -346,23 +455,37 @@ export default function AIClassificationPage() {
                     gap: 1.5
                   }}
                 >
-                  <Chip label={`Category: ${result.classification.category}`} sx={{ bgcolor: '#374151', color: 'white', justifyContent: 'flex-start', p: 2 }} />
-                  <Chip label={`Subcategory: ${result.classification.subcategory}`} sx={{ bgcolor: '#374151', color: 'white', justifyContent: 'flex-start', p: 2 }} />
+                  <Chip label={`Category: ${result.classification.category}`} sx={{ bgcolor: MAIN_BG_COLOR, color: 'white', justifyContent: 'flex-start', p: 2, borderRadius: 2 }} />
+                  <Chip label={`Subcategory: ${result.classification.subcategory}`} sx={{ bgcolor: MAIN_BG_COLOR, color: 'white', justifyContent: 'flex-start', p: 2, borderRadius: 2 }} />
                   <Chip
                     label={`Priority: ${result.classification.priority}`}
                     size="small"
                     sx={{
                       ...priorityColors[result.classification.priority],
                       textTransform: 'capitalize',
-                      fontWeight: 600,
-                      justifyContent: 'flex-start', p: 2
+                      fontWeight: 700,
+                      justifyContent: 'flex-start', p: 2, borderRadius: 2
                     }}
                   />
-                  <Chip label={`Assign To: ${result.classification.assignToTeam}`} sx={{ bgcolor: '#374151', color: 'white', justifyContent: 'flex-start', p: 2 }} />
+                  <Chip label={`Assign To: ${result.classification.assignToTeam}`} sx={{ bgcolor: MAIN_BG_COLOR, color: 'white', justifyContent: 'flex-start', p: 2, borderRadius: 2 }} />
+                  <Chip label={`Confidence: ${result.classification.confidence * 100}%`} sx={{ bgcolor: MAIN_BG_COLOR, color: 'white', justifyContent: 'flex-start', p: 2, borderRadius: 2 }} />
+                  <Chip label={`Est. Time: ${result.classification.estimatedResolutionTime}`} sx={{ bgcolor: MAIN_BG_COLOR, color: 'white', justifyContent: 'flex-start', p: 2, borderRadius: 2 }} />
+
                 </Box>
-                <Box sx={{ mt: 1 }}>
-                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>Suggested Resolution</Typography>
+                <Box sx={{ mt: 1, p: 2, bgcolor: MAIN_BG_COLOR, border: `1px solid rgba(52, 211, 153, 0.15)`, borderRadius: 2 }}>
+                  <Typography variant="subtitle2" color={ACCENT_COLOR} fontWeight="bold" gutterBottom>Suggested Resolution</Typography>
                   <Typography variant="body2">{result.classification.suggestedResolution}</Typography>
+                </Box>
+                <Box sx={{ mt: 1, p: 2, bgcolor: MAIN_BG_COLOR, border: `1px solid rgba(52, 211, 153, 0.15)`, borderRadius: 2 }}>
+                  <Typography variant="subtitle2" color={ACCENT_COLOR} fontWeight="bold" gutterBottom>Auto Resolution Steps</Typography>
+                  <List sx={{ color: TEXT_MUTED, p: 0 }}>
+                      {result.classification.autoResolutionSteps.map((step, index) => (
+                          <ListItem key={index} disablePadding sx={{ py: 0.5 }}>
+                              <ListItemIcon sx={{ minWidth: 24, color: ACCENT_COLOR }}>•</ListItemIcon>
+                              <ListItemText primary={<Typography variant="body2" color="white">{step}</Typography>} />
+                          </ListItem>
+                      ))}
+                  </List>
                 </Box>
               </CardContent>
             </Card>

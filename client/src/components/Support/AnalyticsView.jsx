@@ -5,13 +5,13 @@ import { NavLink } from 'react-router-dom';
 import {
   Box, Card, CardContent, CardHeader, Grid, Typography, Tabs, Tab, List,
   ListItem, ListItemButton, ListItemIcon, ListItemText, LinearProgress, Avatar,
-  createTheme, ThemeProvider, CssBaseline, Drawer, IconButton, Divider, // Added Divider
+  createTheme, ThemeProvider, CssBaseline, Drawer, IconButton, Divider,
 } from '@mui/material';
 
 // Lucide React Icons
 import {
-  Ticket, Users, Bot, Sparkles, BookOpen, Bell, TrendingUp, Clock,
-  CheckCircle2, Settings, Menu as MenuIcon, LogOut, // Added LogOut
+  Ticket, Users, Bot, Sparkles, BookOpen, TrendingUp, Clock,
+  CheckCircle2, Settings, Menu as MenuIcon, LogOut, X,
 } from 'lucide-react';
 
 // MUI X Charts
@@ -19,26 +19,57 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
+// --- THEME CONSTANTS ---
+const MAIN_BG_COLOR = '#000000'; 
+const SIDEBAR_COLOR = '#030712'; 
+const ACCENT_COLOR = '#34d399'; 
+const ACCENT_HOVER_COLOR = '#10b981'; 
+const TEXT_MUTED = '#9ca3af'; 
+const DARK_CARD_COLOR = 'rgba(3, 7, 18, 0.6)'; 
+const CARD_HOVER_BG = 'rgba(52, 211, 153, 0.05)';
+const CARD_GLOW_SHADOW = `0 10px 20px 0 rgba(16, 185, 129, 0.15)`;
+// ----------------------------------------------------------------------
+
 // --- THEME DEFINITION ---
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
-    primary: { main: '#34d399' },
-    secondary: { main: '#10b981' },
-    background: { default: '#0a0a0a', paper: '#1a1a1a' },
-    text: { primary: '#e5e5e5', secondary: '#9ca3af' },
-    divider: 'rgba(255, 255, 255, 0.1)',
+    primary: { main: ACCENT_COLOR },
+    secondary: { main: ACCENT_HOVER_COLOR },
+    background: { default: MAIN_BG_COLOR, paper: SIDEBAR_COLOR },
+    text: { primary: 'white', secondary: TEXT_MUTED },
+    divider: 'rgba(52, 211, 153, 0.2)',
   },
-  typography: { fontFamily: 'inherit' },
+  
   components: {
     MuiCard: {
-      styleOverrides: { root: { backgroundColor: '#000000', border: '1px solid rgba(255, 255, 255, 0.1)', backgroundImage: 'none' } },
+      styleOverrides: { 
+        root: { 
+          backgroundColor: DARK_CARD_COLOR, 
+          border: `1px solid rgba(52, 211, 153, 0.15)`, 
+          backgroundImage: 'none',
+          borderRadius: 3,
+        } 
+      },
     },
     MuiTab: {
-      styleOverrides: { root: { textTransform: 'none', fontWeight: 600 } },
+      styleOverrides: { 
+        root: { 
+          textTransform: 'none', 
+          fontWeight: 600,
+          color: TEXT_MUTED,
+          '&.Mui-selected': {
+            color: ACCENT_COLOR,
+          }
+        } 
+      },
     },
     MuiTabs: {
-      styleOverrides: { indicator: { background: 'linear-gradient(to right, #34d399, #10b981)' } },
+      styleOverrides: { 
+        indicator: { 
+          background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})` 
+        } 
+      },
     },
   },
 });
@@ -112,47 +143,177 @@ function AnalyticsView() {
     { text: 'AI Classification', icon: Sparkles, href: '/classify' },
     { text: 'Knowledge Base', icon: BookOpen, href: '/knowledgebase' },
     { text: 'Analytics', icon: TrendingUp, href: '/analytics' },
-    { text: 'Settings', icon: Settings, href: '/settings' },
   ];
 
   const drawerContent = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box 
+      sx={{ 
+        width: drawerWidth, 
+        bgcolor: SIDEBAR_COLOR, 
+        height: "100%", 
+        display: 'flex', 
+        flexDirection: 'column', 
+        color: 'white',
+        overflowX: 'hidden'
+      }}
+    >
       <Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', height: 64, borderBottom: 1, borderColor: 'divider', px: 2, bgcolor: '#111' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Avatar sx={{ background: 'linear-gradient(to right, #34d399, #10b981)', width: 32, height: 32, bgcolor: 'transparent' }}>
-              <Ticket size={18} color="#fff" />
-            </Avatar>
-            <Typography variant="h6" component="span" sx={{ fontWeight: 'bold', color: '#fff' }}>
-              POWERGRID IT
-            </Typography>
+        <Box
+          sx={{
+            height: 64,
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
+            px: 3,
+            display: "flex",
+            alignItems: "center",
+            bgcolor: DARK_CARD_COLOR,
+          }}
+        >
+          {/* --- LOGO UPDATED HERE --- */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{
+                  position: 'relative',
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  bgcolor: ACCENT_COLOR,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  animation: 'logoPulse 2s ease-in-out infinite' // Pulse animation
+              }}>
+                  <Box sx={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      backdropFilter: 'blur(2px)',
+                  }} />
+                  <Bot 
+                    size={24} 
+                    color="#000000" 
+                    strokeWidth={2.5} 
+                    style={{ 
+                      position: 'relative', 
+                      zIndex: 10,
+                      animation: 'float 3s ease-in-out infinite' // Float animation
+                    }} 
+                  />
+              </Box>
+              <Typography variant="h6" fontWeight="bold" color="white">
+                  POWERGRID
+              </Typography>
           </Box>
+          {/* --- END OF LOGO UPDATE --- */}
         </Box>
+
         <List sx={{ p: 1 }}>
           {navItems.map((item) => {
             const IconComponent = item.icon;
+            const isSelected = item.text === 'Analytics'; 
+
             return (
               <ListItem key={item.text} disablePadding>
-                <ListItemButton component={NavLink} to={item.href} sx={{ borderRadius: 1, '&:hover': { background: 'linear-gradient(to right, #34d39922, #10b98122)' } }}>
-                  <ListItemIcon sx={{ color: '#fff', minWidth: 36 }}>
-                    <IconComponent size={18} />
+                <ListItemButton
+                  component={NavLink}
+                  to={item.href}
+                  selected={isSelected}
+                  sx={{
+                    borderRadius: 2, 
+                    color: 'white',
+                    py: 1.5,
+                    overflow: 'hidden', 
+                    whiteSpace: 'nowrap',
+                    "&.Mui-selected": {
+                      background: CARD_HOVER_BG,
+                      color: ACCENT_COLOR,
+                      "& .MuiListItemIcon-root": {
+                        color: ACCENT_COLOR,
+                      }
+                    },
+                    "&:hover": {
+                      background: CARD_HOVER_BG,
+                      color: ACCENT_COLOR,
+                      "& .MuiListItemIcon-root": {
+                        color: ACCENT_COLOR,
+                      }
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                    <Box sx={{ width: 32, height: 32, borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                      <IconComponent size={18} color={isSelected ? ACCENT_COLOR : TEXT_MUTED} /> 
+                    </Box>
                   </ListItemIcon>
-                  <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }} primary={item.text} />
+                  <ListItemText
+                    primary={
+                      <Typography variant="body2" color="inherit" fontWeight="medium" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {item.text}
+                      </Typography>
+                    }
+                  />
                 </ListItemButton>
               </ListItem>
             );
           })}
         </List>
       </Box>
+
       <Box sx={{ marginTop: 'auto' }}>
-        <Divider />
+        <Divider sx={{ bgcolor: 'rgba(52, 211, 153, 0.2)' }} /> 
         <List sx={{ p: 1 }}>
           <ListItem disablePadding>
-            <ListItemButton component={NavLink} to="/" sx={{ borderRadius: 1, '&:hover': { background: 'linear-gradient(to right, #34d39922, #10b98122)' } }}>
-              <ListItemIcon sx={{ color: '#fff', minWidth: 36 }}>
+            <ListItemButton
+              component={NavLink}
+              to="/settings"
+              sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
+                "&:hover": {
+                  background: CARD_HOVER_BG, 
+                  color: ACCENT_COLOR,
+                  "& .MuiListItemIcon-root": { color: ACCENT_COLOR },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                <Settings size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Settings
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={NavLink}
+              to="/"
+              sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
+                "&:hover": {
+                  background: CARD_HOVER_BG, 
+                  color: '#ef4444',
+                  "& .MuiListItemIcon-root": { color: '#ef4444' },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
                 <LogOut size={18} />
               </ListItemIcon>
-              <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }} primary="Logout" />
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Logout
+                  </Typography>
+                }
+              />
             </ListItemButton>
           </ListItem>
         </List>
@@ -161,7 +322,27 @@ function AnalyticsView() {
   );
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh' }}>
+    <Box sx={{ display: 'flex', height: '100vh', bgcolor: MAIN_BG_COLOR }}>
+      <style>{`
+        @keyframes logoPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+      `}</style>
+
       <Box
         component="nav"
         sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
@@ -171,13 +352,22 @@ function AnalyticsView() {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
-          sx={{ display: { xs: 'block', md: 'none' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: 'background.paper' } }}
+          sx={{ display: { xs: 'block', md: 'none' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: SIDEBAR_COLOR, overflowX: 'hidden' } }}
         >
           {drawerContent}
         </Drawer>
         <Drawer
           variant="permanent"
-          sx={{ display: { xs: 'none', md: 'block' }, '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: 'background.paper' } }}
+          sx={{ 
+            display: { xs: 'none', md: 'block' }, 
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth, 
+              bgcolor: SIDEBAR_COLOR,
+              borderRight: `1px solid rgba(52, 211, 153, 0.2)`,
+              overflowX: 'hidden'
+            } 
+          }}
           open
         >
           {drawerContent}
@@ -188,16 +378,28 @@ function AnalyticsView() {
         component="main"
         sx={{ flexGrow: 1, width: { md: `calc(100% - ${drawerWidth}px)` }, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
       >
-        <Box component="header" sx={{ display: 'flex', height: 64, alignItems: 'center', justifyContent: 'space-between', borderBottom: 1, borderColor: 'divider', bgcolor: '#000', px: { xs: 2, md: 3 } }}>
+        <Box 
+          component="header" 
+          sx={{ 
+            display: 'flex', 
+            height: 64, 
+            alignItems: 'center', 
+            justifyContent: 'space-between', 
+            borderBottom: 1, 
+            borderColor: 'divider', 
+            bgcolor: MAIN_BG_COLOR, 
+            px: { xs: 2, md: 3 } 
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
-              <MenuIcon />
+            <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' }, color: ACCENT_COLOR }}>
+              {mobileOpen ? <X size={24} /> : <MenuIcon size={24} />}
             </IconButton>
             <Box>
-              <Typography variant="h5" sx={{ fontWeight: 'bold', background: 'linear-gradient(to right, #34d399, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Analytics Dashboard
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color={TEXT_MUTED}>
                 Ticket metrics and performance insights
               </Typography>
             </Box>
@@ -211,21 +413,22 @@ function AnalyticsView() {
 
         <Box sx={{ flex: 1, overflow: 'auto', p: { xs: 2, md: 3 } }}>
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>AI Performance Metrics</Typography>
-            <Grid container spacing={2}>
+            <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>AI Performance Metrics</Typography>
+            <br />
+            <Grid container spacing={3}>
               {aiMetrics.map((metric) => {
                 const IconComponent = iconMap[metric.icon];
                 return (
                   <Grid item xs={12} sm={6} lg={3} key={metric.label}>
-                    <Card>
+                    <Card sx={{ transition: 'all 0.3s',borderRadius:"20px", minWidth:260 , bgcolor: "#11182780", '&:hover': { transform: 'translateY(-4px)', boxShadow: CARD_GLOW_SHADOW,  } }}>
                       <CardContent>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <Box>
-                            <Typography variant="body2" color="text.secondary" fontWeight="medium">{metric.label}</Typography>
+                            <Typography variant="body2" color={TEXT_MUTED} fontWeight="medium">{metric.label}</Typography>
                             <Typography variant="h4" sx={{ mt: 1, fontWeight: 'bold' }}>{metric.value}</Typography>
-                            <Typography variant="body2" sx={{ mt: 0.5, color: '#34d399' }}>{metric.change}</Typography>
+                            <Typography variant="body2" sx={{ mt: 0.5, color: ACCENT_COLOR }}>{metric.change}</Typography>
                           </Box>
-                          <Avatar sx={{ bgcolor: 'rgba(52, 211, 153, 0.1)', color: metric.color }}>
+                          <Avatar sx={{ bgcolor: CARD_HOVER_BG, color: metric.color }}>
                             <IconComponent size={24} />
                           </Avatar>
                         </Box>
@@ -236,10 +439,10 @@ function AnalyticsView() {
               })}
             </Grid>
           </Box>
-
+          <br />
           <Grid container spacing={3}>
             <Grid item xs={12} lg={6}>
-              <Card>
+              <Card sx={{bgcolor: "#11182780", borderRadius:"20px"}}>
                 <CardHeader title="Ticket Trends" subheader="Created vs Resolved tickets over time" />
                 <CardContent>
                   <Box sx={{ height: 320 }}>
@@ -247,7 +450,7 @@ function AnalyticsView() {
                       dataset={ticketTrendData}
                       xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
                       series={[
-                        { dataKey: 'created', label: 'Created', color: '#34d399' },
+                        { dataKey: 'created', label: 'Created', color: ACCENT_COLOR },
                         { dataKey: 'resolved', label: 'Resolved', color: '#a78bfa' },
                       ]}
                       grid={{ vertical: false, horizontal: true }}
@@ -257,12 +460,12 @@ function AnalyticsView() {
               </Card>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <Card>
+              <Card sx={{bgcolor: "#11182780", borderRadius:"20px"}}>
                 <CardHeader title="Tickets by Category" subheader="Distribution of ticket categories" />
                 <CardContent>
                   <Box sx={{ height: 320 }}>
                     <PieChart
-                      colors={['#34d399', '#60a5fa', '#f59e0b', '#a78bfa', '#f472b6']}
+                      colors={[ACCENT_COLOR, '#60a5fa', '#f59e0b', '#a78bfa', '#f472b6']}
                       series={[{
                         data: pieChartData,
                         highlightScope: { faded: 'global', highlighted: 'item' },
@@ -281,14 +484,14 @@ function AnalyticsView() {
               </Card>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <Card>
+              <Card sx={{bgcolor: "#11182780", borderRadius:"20px"}}>
                 <CardHeader title="Tickets by Source" subheader="Ticket ingestion from different platforms" />
                 <CardContent>
                   <Box sx={{ height: 320 }}>
                    <BarChart
                       dataset={sourceData}
                       yAxis={[{ scaleType: 'band', dataKey: 'source' }]}
-                      series={[{ dataKey: 'count', label: 'Tickets', color: '#34d399' }]}
+                      series={[{ dataKey: 'count', label: 'Tickets', color: ACCENT_COLOR }]}
                       layout="horizontal"
                       grid={{ vertical: true, horizontal: false }}
                     />
@@ -297,7 +500,7 @@ function AnalyticsView() {
               </Card>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <Card>
+              <Card sx={{bgcolor: "#11182780", borderRadius:"20px"}} >
                 <CardHeader title="Average Resolution Time" subheader="Resolution time trend in hours" />
                 <CardContent>
                   <Box sx={{ height: 320 }}>
@@ -313,18 +516,32 @@ function AnalyticsView() {
             </Grid>
           </Grid>
           
-          <Card sx={{ mt: 3 }}>
+          <Card sx={{ mt: 3, borderRadius: "20px" }}>
             <CardHeader title="Team Performance" subheader="Performance metrics by support team" />
             <CardContent>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {teamPerformanceData.map((team) => (
                   <Box
                     key={team.team}
-                    sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', justifyContent: 'space-between', border: 1, borderColor: 'divider', p: 2, borderRadius: 2 }}
+                    sx={{ 
+                      display: 'flex', 
+                      flexDirection: { xs: 'column', sm: 'row' }, 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between', 
+                      border: `1px solid rgba(52, 211, 153, 0.1)`, 
+                      p: 2, 
+                      borderRadius: 2,
+                      bgcolor: MAIN_BG_COLOR,
+                      transition: 'all 0.2s',
+                      '&:hover': {
+                        bgcolor: DARK_CARD_COLOR,
+                        borderColor: ACCENT_COLOR
+                      }
+                    }}
                   >
                     <Box sx={{ flex: 1, width: '100%', mb: { xs: 2, sm: 0 } }}>
                       <Typography variant="subtitle1" fontWeight="bold">{team.team}</Typography>
-                      <Box sx={{ mt: 1, display: 'flex', gap: 3, color: 'text.secondary', typography: 'body2' }}>
+                      <Box sx={{ mt: 1, display: 'flex', gap: 3, color: TEXT_MUTED, typography: 'body2' }}>
                         <span>Resolved: {team.resolved}</span>
                         <span>Avg Time: {team.avgTime}h</span>
                       </Box>
@@ -333,9 +550,9 @@ function AnalyticsView() {
                       <LinearProgress
                         variant="determinate"
                         value={(team.satisfaction / 5) * 100}
-                        sx={{ width: '100%', height: 8, borderRadius: 4, '& .MuiLinearProgress-bar': { background: 'linear-gradient(to right, #34d399, #10b981)' } }}
+                        sx={{ width: '100%', height: 8, borderRadius: 4, bgcolor: MAIN_BG_COLOR, '& .MuiLinearProgress-bar': { background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})` } }}
                       />
-                      <Typography variant="body2" fontWeight="medium">{team.satisfaction}</Typography>
+                      <Typography variant="body2" fontWeight="medium" color={ACCENT_COLOR}>{team.satisfaction}</Typography>
                     </Box>
                   </Box>
                 ))}

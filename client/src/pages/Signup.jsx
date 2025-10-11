@@ -14,55 +14,51 @@ import {
   InputLabel,
   Select,
 } from "@mui/material";
-import { Bot, UserPlus } from "lucide-react"; // Added UserPlus icon
+import { Bot, UserPlus } from "lucide-react";
 import axios from "axios";
-import { toast } from "react-hot-toast"; // Using react-hot-toast for consistency
-import { useNavigate } from "react-router-dom"; // Use useNavigate for redirection
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
-// --- Theme Styles Mapping (reusing the dark/green theme) ---
+// --- Theme Styles Mapping ---
 const themeStyles = {
-  // Main container background and text color
   container: {
     height: "100vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000000", // Black background
+    backgroundColor: "#000000",
     color: "#ffffff",
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
     position: 'relative',
     overflow: 'hidden',
     p: 2,
   },
-  // Dark card style with green accents (inspired by featureCard)
   card: {
     borderRadius: "1rem",
-    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.6))', // Dark, semi-transparent background
-    border: '1px solid rgba(16, 185, 129, 0.3)', // Subtle green border
+    background: 'linear-gradient(to bottom right, rgba(17, 24, 39, 0.8), rgba(3, 7, 18, 0.6))',
+    border: '1px solid rgba(16, 185, 129, 0.3)',
     boxShadow: '0 10px 30px rgba(16, 185, 129, 0.1), 0 0 10px rgba(0,0,0,0.5)',
     backdropFilter: 'blur(10px)',
     p: 3,
   },
-  // Input field styles (TextField and Select)
   inputField: {
     borderRadius: "0.5rem",
-    backgroundColor: "rgba(17, 24, 39, 0.7)", // Darker input background
-    border: "1px solid rgba(16, 185, 129, 0.2)", // Thin green border
+    backgroundColor: "rgba(17, 24, 39, 0.7)",
+    border: "1px solid rgba(16, 185, 129, 0.2)",
     boxShadow: "none",
     fontSize: 14,
     color: "white",
     "&::placeholder": { fontSize: 12, color: "rgba(255,255,255,0.6)" },
-    "& fieldset": { border: "none" }, // Hide default MUI border
+    "& fieldset": { border: "none" },
   },
-  // Primary button style (green gradient)
   primaryButton: {
     mt: 2,
     textTransform: "none",
     borderRadius: "0.5rem",
     fontSize: 14,
     py: 1.2,
-    background: 'linear-gradient(to right, #34d399, #10b981)', // Green gradient
+    background: 'linear-gradient(to right, #34d399, #10b981)',
     color: '#000000',
     fontWeight: 600,
     transition: 'all 0.3s',
@@ -76,7 +72,6 @@ const themeStyles = {
       color: '#333333',
     }
   },
-  // Logo Icon Container
   logoIconContainer: {
     width: 48,
     height: 48,
@@ -87,11 +82,16 @@ const themeStyles = {
     justifyContent: "center",
     mx: "auto",
     mb: 1,
-    boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)', // Green glow
+    boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)',
     overflow: 'hidden',
     position: 'relative',
+    animation: 'logoPulse 2s ease-in-out infinite', // Animation for the container
   },
-  // Typography
+  logoBotIcon: {
+    position: 'relative',
+    zIndex: 10,
+    animation: 'float 3s ease-in-out infinite', // Animation for the bot icon itself
+  },
   titleText: {
     fontWeight: 800,
     fontSize: 28,
@@ -106,13 +106,12 @@ const themeStyles = {
     fontWeight: 300,
   },
   linkText: {
-    color: "#34d399", // Green link color
+    color: "#34d399",
     textDecoration: "underline",
     "&:hover": {
       color: "#10b981",
     }
   },
-  // Floating Orbs for the landing page theme
   floatingOrb1: {
     position: 'absolute',
     top: '5rem',
@@ -148,14 +147,14 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(""); // Changed default to 'employee'
+  const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !employeeId || !password) {
+    if (!name || !email || !employeeId || !password || !role) {
         toast.error("All fields are required ❌");
         return;
     }
@@ -163,7 +162,6 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      // NOTE: Using environment variable for backend URL if possible, otherwise keep hardcoded for now
       const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
       const res = await axios.post(`${backendUrl}/api/register`, {
@@ -175,8 +173,6 @@ export default function SignupPage() {
       });
 
       console.log(res.data);
-      // NOTE: You generally don't log in the user on signup; you redirect them to login.
-      // Keeping this line commented out: localStorage.setItem("user", JSON.stringify(res.data.user));
       
       toast.success(res.data.message || "Registration successful! Please log in. ✅");
       navigate("/login"); 
@@ -190,7 +186,6 @@ export default function SignupPage() {
 
   return (
     <Box sx={themeStyles.container}>
-      {/* CSS Keyframes (replicate from LandingPage) */}
       <style>{`
         @keyframes floatingGlow {
           0%, 100% {
@@ -202,8 +197,29 @@ export default function SignupPage() {
             opacity: 0.6;
           }
         }
-        .MuiFormLabel-root { color: #9ca3af !important; } /* Label color */
-        .MuiInputLabel-shrink { color: #34d399 !important; } /* Focused label color */
+        
+        /* --- NEW ANIMATIONS ADDED HERE --- */
+        @keyframes logoPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7), 0 0 20px rgba(16, 185, 129, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(52, 211, 153, 0), 0 0 20px rgba(16, 185, 129, 0.5);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+        /* --- END OF NEW ANIMATIONS --- */
+
+        .MuiFormLabel-root { color: #9ca3af !important; }
+        .MuiInputLabel-shrink { color: #34d399 !important; }
       `}</style>
 
       {/* Background Orbs */}
@@ -214,7 +230,8 @@ export default function SignupPage() {
         {/* Logo */}
         <Box sx={{ textAlign: "center", mb: 4, mt: 0 }}>
           <Box sx={themeStyles.logoIconContainer}>
-            <Bot size={24} color="black" strokeWidth={2.5} />
+             {/* --- UPDATED BOT ICON WITH NEW STYLE --- */}
+            <Bot size={24} color="black" strokeWidth={2.5} style={themeStyles.logoBotIcon} />
           </Box>
           <Typography variant="h4" sx={themeStyles.titleText}>
             POWERGRID IT Support
@@ -270,26 +287,26 @@ export default function SignupPage() {
 
               {/* Role Dropdown */}
               <Box sx={{ mb: 2 }}>
-                              <FormControl fullWidth>
-                                <InputLabel id="role-select-label" sx={{ color: '#9ca3af' }}>Role</InputLabel>
-                                <Select
-                                  labelId="role-select-label"
-                                  id="role-select"
-                                  value={role}
-                                  label="Role"
-                                  onChange={(e) => setRole(e.target.value)}
-                                  MenuProps={{ PaperProps: { sx: { backgroundColor: '#111827', color: 'white' } } }}
-                                  sx={{
-                                    ...themeStyles.inputField,
-                                    "& .MuiSelect-select": { py: '12.5px' },
-                                    "& .MuiSelect-icon": { color: "#34d399" }, // Green icon
-                                  }}
-                                >
-                                  <MenuItem value="admin">Admin</MenuItem>
-                                  <MenuItem value="employee">Employee</MenuItem>
-                                </Select>
-                              </FormControl>
-                            </Box>
+                <FormControl fullWidth>
+                  <InputLabel id="role-select-label" sx={{ color: '#9ca3af' }}>Role</InputLabel>
+                  <Select
+                    labelId="role-select-label"
+                    id="role-select"
+                    value={role}
+                    label="Role"
+                    onChange={(e) => setRole(e.target.value)}
+                    MenuProps={{ PaperProps: { sx: { backgroundColor: '#111827', color: 'white' } } }}
+                    sx={{
+                      ...themeStyles.inputField,
+                      "& .MuiSelect-select": { py: '12.5px' },
+                      "& .MuiSelect-icon": { color: "#34d399" },
+                    }}
+                  >
+                    <MenuItem value="admin">IT Support</MenuItem>
+                    <MenuItem value="employee">Employee</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
 
               {/* Sign Up Button */}
               <Button

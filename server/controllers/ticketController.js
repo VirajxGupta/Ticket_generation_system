@@ -38,24 +38,6 @@ export const createTicket = async (req, res) => {
 };
 
 
-//Ticket inProgress
-export const inProgressTicket = async (req, res) => {
-  try {
-    const { ticketId } = req.params;
-    const { notifyType } = req.body; // 👈 from frontend
-
-    if (notifyType === "email") {
-      await sendEmail("user@gmail.com", "Ticket In Progress", `Your ticket ${ticketId} is now in progress ⚡`);
-    } else if (notifyType === "sms") {
-      await sendSMS("+91XXXXXXXXXX", `Your ticket ${ticketId} is in progress ⚡`);
-    }
-
-    res.json({ message: `Ticket ${ticketId} marked as in-progress (${notifyType}) ✅` });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
 
 // Ticket Resolve
 

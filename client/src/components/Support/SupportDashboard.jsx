@@ -12,11 +12,11 @@ import {
   Avatar,
   Drawer,
   List,
-  ListItem, // Added
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider, // Added
+  Divider,
 } from "@mui/material";
 import {
   Search,
@@ -30,12 +30,24 @@ import {
   Settings,
   Menu,
   X,
-  LogOut, // Added
+  LogOut,
 } from "lucide-react";
 import StatsCards from "./StatsCards.jsx";
 import TicketList from "./TicketList.jsx";
 import TicketDetails from "./TicketDetails.jsx";
 import { Link } from "react-router-dom";
+
+// --- THEME CONSTANTS ---
+const MAIN_BG_COLOR = '#000000'; 
+const SIDEBAR_COLOR = '#030712'; 
+const CARD_BG_COLOR = 'rgba(17, 24, 39, 0.8)';
+const ACCENT_COLOR = '#34d399'; 
+const ACCENT_HOVER_COLOR = '#10b981'; 
+const TEXT_MUTED = '#9ca3af'; 
+const DARK_CARD_COLOR = 'rgba(3, 7, 18, 0.6)';
+const CARD_HOVER_BG = 'rgba(52, 211, 153, 0.05)';
+const CARD_GLOW_SHADOW = `0 15px 30px 0 rgba(16, 185, 129, 0.2)`;
+// ----------------------------------------------------------------------
 
 export default function SupportDashboard() {
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -50,39 +62,61 @@ export default function SupportDashboard() {
     { label: "AI Classification", icon: Sparkles, href: "/classify" },
     { label: "Knowledge Base", icon: BookOpen, href: "/knowledgebase" },
     { label: "Analytics", icon: TrendingUp, href: "/analytics" },
-    { label: "Settings", icon: Settings, href: "/settings" },
   ];
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const SidebarContent = (
-    <Box sx={{ width: 256, bgcolor: "#1a1a1a", height: "100%", display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ width: 256, bgcolor: SIDEBAR_COLOR, height: "100%", display: 'flex', flexDirection: 'column', color: 'white' }}>
       <Box>
         <Box
           sx={{
             height: 64,
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
             px: 3,
             display: "flex",
             alignItems: "center",
-            bgcolor: "#111",
+            bgcolor: DARK_CARD_COLOR,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Avatar
-              sx={{
-                bgcolor: "transparent",
-                background: "linear-gradient(to right, #34d399, #10b981)",
-                width: 32,
-                height: 32,
-              }}
-            >
-              <Ticket size={18} color="#fff" />
-            </Avatar>
-            <Typography variant="subtitle1" fontWeight="600" color="#fff">
+          {/* --- LOGO UPDATED HERE --- */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{
+              position: 'relative',
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              bgcolor: ACCENT_COLOR,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              animation: 'logoPulse 2s ease-in-out infinite', // Pulse animation for container
+            }}>
+              <Box sx={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(2px)',
+              }} />
+              <Bot 
+                size={24} 
+                color="#000000" 
+                strokeWidth={2.5} 
+                style={{ 
+                  position: 'relative', 
+                  zIndex: 10,
+                  animation: 'float 3s ease-in-out infinite' // Float animation for icon
+                }} 
+              />
+            </Box>
+            <Typography variant="h6" fontWeight="bold" color="white">
               POWERGRID IT
             </Typography>
           </Box>
+          {/* --- END OF LOGO UPDATE --- */}
+
         </Box>
         <List sx={{ p: 1 }}>
           {sidebarItems.map((item) => (
@@ -91,17 +125,23 @@ export default function SupportDashboard() {
                 component={Link}
                 to={item.href}
                 sx={{
+                  borderRadius: 2, 
+                  color: 'white',
+                  py: 1.5,
                   "&:hover": {
-                    background: "linear-gradient(to right, #34d39933, #10b98133)",
+                    background: CARD_HOVER_BG,
+                    color: ACCENT_COLOR,
                   },
                 }}
               >
-                <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
-                  <item.icon size={18} />
+                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                  <Box sx={{ width: 32, height: 32, borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                    <item.icon size={18} color={TEXT_MUTED} /> 
+                  </Box>
                 </ListItemIcon>
                 <ListItemText
                   primary={
-                    <Typography variant="body2" color="#fff">
+                    <Typography variant="body2" color="inherit" fontWeight="medium">
                       {item.label}
                     </Typography>
                   }
@@ -113,24 +153,54 @@ export default function SupportDashboard() {
       </Box>
 
       <Box sx={{ marginTop: 'auto' }}>
-        <Divider />
+        <Divider sx={{ bgcolor: 'rgba(52, 211, 153, 0.2)' }} /> 
         <List sx={{ p: 1 }}>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/settings"
+              sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
+                "&:hover": {
+                  background: CARD_HOVER_BG, 
+                  color: ACCENT_COLOR,
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                <Settings size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Settings
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
           <ListItem disablePadding>
             <ListItemButton
               component={Link}
               to="/"
               sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
                 "&:hover": {
-                  background: "linear-gradient(to right, #34d39933, #10b98133)",
+                  background: CARD_HOVER_BG, 
+                  color: '#ef4444',
                 },
               }}
             >
-              <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
                 <LogOut size={18} />
               </ListItemIcon>
               <ListItemText
                 primary={
-                  <Typography variant="body2" color="#fff">
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
                     Logout
                   </Typography>
                 }
@@ -143,13 +213,33 @@ export default function SupportDashboard() {
   );
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: "#0a0a0a", color: "#e5e5e5" }}>
+    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: MAIN_BG_COLOR, color: "white" }}>
+        <style>{`
+            @keyframes logoPulse {
+                0%, 100% {
+                    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+                }
+                50% {
+                    box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+                }
+            }
+
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-3px);
+                }
+            }
+      `}</style>
+      
       {/* Sidebar for large screens */}
       <Box
         sx={{
           display: { xs: "none", md: "flex" },
           width: 256,
-          borderRight: "1px solid rgba(255,255,255,0.1)",
+          borderRight: `1px solid rgba(52, 211, 153, 0.2)`,
           flexDirection: "column",
         }}
       >
@@ -157,7 +247,7 @@ export default function SupportDashboard() {
       </Box>
 
       {/* Drawer for small screens */}
-      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: "#1a1a1a" } }}>
+      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: SIDEBAR_COLOR } }}>
         {SidebarContent}
       </Drawer>
 
@@ -173,8 +263,8 @@ export default function SupportDashboard() {
         {/* Navbar */}
         <Box
           sx={{
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
-            bgcolor: "#000",
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
+            bgcolor: MAIN_BG_COLOR,
             px: 3,
             display: "flex",
             flexDirection: { xs: "column", sm: "row" },
@@ -187,9 +277,8 @@ export default function SupportDashboard() {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%" }}>
-            {/* Hamburger on mobile */}
             <IconButton
-              sx={{ display: { xs: "inline-flex", md: "none" }, color: "#10b981" }}
+              sx={{ display: { xs: "inline-flex", md: "none" }, color: ACCENT_COLOR }}
               onClick={toggleSidebar}
             >
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -198,9 +287,9 @@ export default function SupportDashboard() {
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography
                 variant="h6"
-                fontWeight="600"
+                fontWeight="bold" 
                 sx={{
-                  background: "linear-gradient(to right, #34d399, #10b981)",
+                  background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   whiteSpace: "nowrap",
@@ -212,7 +301,7 @@ export default function SupportDashboard() {
               </Typography>
               <Typography
                 variant="body2"
-                color="#9ca3af"
+                color={TEXT_MUTED}
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -224,7 +313,6 @@ export default function SupportDashboard() {
             </Box>
           </Box>
 
-          {/* Search + Filter */}
           <Box
             sx={{
               display: "flex",
@@ -239,10 +327,10 @@ export default function SupportDashboard() {
                 size={16}
                 style={{
                   position: "absolute",
-                  left: 12,
+                  left: 10,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  color: "#9CA3AF",
+                  color: TEXT_MUTED,
                 }}
               />
               <InputBase
@@ -252,16 +340,17 @@ export default function SupportDashboard() {
                 sx={{
                   pl: 5,
                   width: "100%",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 1,
+                  border: `1px solid rgba(52, 211, 153, 0.2)`,
+                  borderRadius: 2, 
                   py: 0.5,
-                  px: 1,
-                  bgcolor: "#1a1a1a",
-                  color: "#fff",
+                  px: 4,
+                  bgcolor: DARK_CARD_COLOR,
+                  color: "white",
+                  '& input::placeholder': { color: TEXT_MUTED }
                 }}
               />
             </Box>
-            <IconButton sx={{ color: "#10b981" }}>
+            <IconButton sx={{ color: ACCENT_COLOR, border: `1px solid rgba(52, 211, 153, 0.2)`, borderRadius: 2, p: 1 }}>
               <Filter size={16} />
             </IconButton>
           </Box>
@@ -280,7 +369,7 @@ export default function SupportDashboard() {
               flex: 1,
               display: "flex",
               flexDirection: { xs: "column", md: "row" },
-              gap: 2,
+              gap: 3, 
               px: 3,
               pb: 3,
               overflow: "hidden",
@@ -298,17 +387,18 @@ export default function SupportDashboard() {
             >
               <Card
                 sx={{
-                  bgcolor: "black",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: "#fff",
+                  bgcolor: DARK_CARD_COLOR,
+                  border: `1px solid rgba(52, 211, 153, 0.15)`,
+                  color: "white",
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
                   overflow: "hidden",
+                  borderRadius: 3, 
                 }}
               >
                 <CardHeader
-                  sx={{ pb: 1 }}
+                  sx={{ pb: 1, borderBottom: '1px solid #1a1a1a' , bgcolor:"#11182780"}} 
                   title={
                     <Box
                       sx={{
@@ -320,8 +410,8 @@ export default function SupportDashboard() {
                       }}
                     >
                       <Box>
-                        <Typography variant="h6">Recent Tickets</Typography>
-                        <Typography variant="body2" color="#9ca3af">
+                        <Typography variant="h6" fontWeight="bold">Recent Tickets</Typography>
+                        <Typography variant="body2" color={TEXT_MUTED}>
                           View and manage support tickets
                         </Typography>
                       </Box>
@@ -330,11 +420,13 @@ export default function SupportDashboard() {
                         value={tabValue}
                         onChange={(e, newValue) => setTabValue(newValue)}
                         textColor="inherit"
-                        indicatorColor="secondary"
+                        indicatorColor="primary" 
                         sx={{
                           "& .MuiTabs-indicator": {
-                            background: "linear-gradient(to right, #34d399, #10b981)",
+                            background: ACCENT_COLOR,
                           },
+                          "& .MuiTab-root": { color: TEXT_MUTED, fontWeight: 'medium' },
+                          "& .Mui-selected": { color: ACCENT_COLOR, fontWeight: 'bold' },
                         }}
                         variant="scrollable"
                         scrollButtons="auto"
@@ -347,7 +439,7 @@ export default function SupportDashboard() {
                     </Box>
                   }
                 />
-                <CardContent sx={{ flex: 1, overflowY: "auto" }}>
+                <CardContent sx={{ flex: 1, overflowY: "auto", p: 0 }}>
                   <TicketList
                     onSelectTicket={setSelectedTicket}
                     selectedTicket={selectedTicket}
@@ -365,19 +457,10 @@ export default function SupportDashboard() {
                   maxHeight: { xs: "none", md: "calc(100vh - 180px)" },
                   overflowY: "auto",
                   overflowX: "hidden",
-                  "&::-webkit-scrollbar": {
-                    width: "8px",
-                  },
-                  "&::-webkit-scrollbar-track": {
-                    background: "#1a1a1a",
-                  },
-                  "&::-webkit-scrollbar-thumb": {
-                    background: "#34d399",
-                    borderRadius: "4px",
-                  },
-                  "&::-webkit-scrollbar-thumb:hover": {
-                    background: "#10b981",
-                  },
+                  "&::-webkit-scrollbar": { width: "8px" },
+                  "&::-webkit-scrollbar-track": { background: MAIN_BG_COLOR },
+                  "&::-webkit-scrollbar-thumb": { background: ACCENT_COLOR, borderRadius: "4px" },
+                  "&::-webkit-scrollbar-thumb:hover": { background: ACCENT_HOVER_COLOR },
                 }}
               >
                 <TicketDetails ticketId={selectedTicket} />

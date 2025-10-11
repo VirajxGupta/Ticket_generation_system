@@ -20,14 +20,14 @@ import {
   Stack,
   Drawer,
   List,
-  ListItem, // Added ListItem
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   IconButton,
   Avatar,
   InputAdornment,
-  Divider, // Added Divider
+  Divider,
 } from "@mui/material";
 import {
   Search,
@@ -45,9 +45,21 @@ import {
   Sparkles,
   TrendingUp,
   Settings,
-  LogOut, // Added LogOut
+  LogOut,
 } from "lucide-react";
-import { Link } from "react-router-dom"; // Assuming react-router-dom is used for navigation
+import { Link } from "react-router-dom"; 
+
+// --- THEME CONSTANTS ---
+const MAIN_BG_COLOR = '#000000'; 
+const SIDEBAR_COLOR = '#030712'; 
+const ACCENT_COLOR = '#34d399'; 
+const ACCENT_HOVER_COLOR = '#10b981'; 
+const TEXT_MUTED = '#9ca3af'; 
+const DARK_CARD_COLOR = 'rgba(3, 7, 18, 0.6)'; 
+const LIGHTER_CARD_COLOR = 'rgba(17, 24, 39, 0.8)';
+const CARD_HOVER_BG = 'rgba(52, 211, 153, 0.05)';
+const CARD_GLOW_SHADOW = `0 10px 20px 0 rgba(16, 185, 129, 0.15)`;
+// ----------------------------------------------------------------------
 
 // --- Mock Data ---
 const mockArticles = [
@@ -123,58 +135,97 @@ export default function KnowledgeBasePage() {
     { label: "AI Classification", icon: Sparkles, href: "/classify" },
     { label: "Knowledge Base", icon: BookOpen, href: "/knowledgebase" },
     { label: "Analytics", icon: TrendingUp, href: "/analytics" },
-    { label: "Settings", icon: Settings, href: "/settings" },
   ];
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const SidebarContent = (
-    <Box sx={{ width: 256, bgcolor: "#1a1a1a", height: "100%", display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ width: 256, bgcolor: SIDEBAR_COLOR, height: "100%", display: 'flex', flexDirection: 'column', color: 'white' }}>
       <Box>
         <Box
           sx={{
             height: 64,
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
             px: 3,
             display: "flex",
             alignItems: "center",
-            bgcolor: "#111",
+            bgcolor: DARK_CARD_COLOR,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Avatar
-              sx={{
-                bgcolor: "transparent",
-                background: "linear-gradient(to right, #34d399, #10b981)",
-                width: 32,
-                height: 32,
-              }}
-            >
-              <Ticket size={18} color="#fff" />
-            </Avatar>
-            <Typography variant="subtitle1" fontWeight="600" color="#fff">
-              POWERGRID IT
-            </Typography>
+          {/* --- LOGO UPDATED HERE --- */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{
+                  position: 'relative',
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  bgcolor: ACCENT_COLOR,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  animation: 'logoPulse 2s ease-in-out infinite' // Pulse animation
+              }}>
+                  <Box sx={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '50%',
+                      background: 'rgba(255, 255, 255, 0.2)',
+                      backdropFilter: 'blur(2px)',
+                  }} />
+                  <Bot 
+                    size={24} 
+                    color="#000000" 
+                    strokeWidth={2.5} 
+                    style={{ 
+                      position: 'relative', 
+                      zIndex: 10,
+                      animation: 'float 3s ease-in-out infinite' // Float animation
+                    }} 
+                  />
+              </Box>
+              <Typography variant="h6" fontWeight="bold" color="white">
+                  POWERGRID
+              </Typography>
           </Box>
+          {/* --- END OF LOGO UPDATE --- */}
         </Box>
+
         <List sx={{ p: 1 }}>
           {sidebarItems.map((item) => (
             <ListItem key={item.label} disablePadding>
               <ListItemButton
                 component={Link}
                 to={item.href}
+                selected={item.label === "Knowledge Base"} 
                 sx={{
+                  borderRadius: 2, 
+                  color: 'white',
+                  py: 1.5,
+                  "&.Mui-selected": {
+                    background: CARD_HOVER_BG,
+                    color: ACCENT_COLOR,
+                    "& .MuiListItemIcon-root": {
+                      color: ACCENT_COLOR,
+                    }
+                  },
                   "&:hover": {
-                    background: "linear-gradient(to right, #34d39933, #10b98133)",
+                    background: CARD_HOVER_BG,
+                    color: ACCENT_COLOR,
+                    "& .MuiListItemIcon-root": {
+                      color: ACCENT_COLOR,
+                    }
                   },
                 }}
               >
-                <ListItemIcon sx={{ color: item.href === "/knowledgebase" ? '#34d399' : "#fff", minWidth: 40 }}>
-                  <item.icon size={18} />
+                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                  <Box sx={{ width: 32, height: 32, borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1 }}>
+                    <item.icon size={18} color={item.label === "Knowledge Base" ? ACCENT_COLOR : TEXT_MUTED} /> 
+                  </Box>
                 </ListItemIcon>
                 <ListItemText
                   primary={
-                    <Typography variant="body2" color={item.href === "/knowledgebase" ? '#34d399' : "#fff"}>
+                    <Typography variant="body2" color="inherit" fontWeight="medium">
                       {item.label}
                     </Typography>
                   }
@@ -186,24 +237,56 @@ export default function KnowledgeBasePage() {
       </Box>
 
       <Box sx={{ marginTop: 'auto' }}>
-        <Divider />
+        <Divider sx={{ bgcolor: 'rgba(52, 211, 153, 0.2)' }} /> 
         <List sx={{ p: 1 }}>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/settings"
+              sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
+                "&:hover": {
+                  background: CARD_HOVER_BG, 
+                  color: ACCENT_COLOR,
+                  "& .MuiListItemIcon-root": { color: ACCENT_COLOR },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                <Settings size={18} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
+                    Settings
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
           <ListItem disablePadding>
             <ListItemButton
               component={Link}
               to="/"
               sx={{
+                borderRadius: 2,
+                color: TEXT_MUTED, 
+                py: 1.5,
                 "&:hover": {
-                  background: "linear-gradient(to right, #34d39933, #10b98133)",
+                  background: CARD_HOVER_BG, 
+                  color: '#ef4444',
+                  "& .MuiListItemIcon-root": { color: '#ef4444' },
                 },
               }}
             >
-              <ListItemIcon sx={{ color: "#fff", minWidth: 40 }}>
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
                 <LogOut size={18} />
               </ListItemIcon>
               <ListItemText
                 primary={
-                  <Typography variant="body2" color="#fff">
+                  <Typography variant="body2" color="inherit" fontWeight="medium">
                     Logout
                   </Typography>
                 }
@@ -215,7 +298,6 @@ export default function KnowledgeBasePage() {
     </Box>
   );
 
-  // --- Knowledge Base Logic ---
   const filteredArticles = mockArticles.filter(
     (article) =>
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -242,21 +324,61 @@ export default function KnowledgeBasePage() {
   const dialogStyles = {
     PaperProps: {
       sx: {
-        bgcolor: '#1a1a1a',
-        color: '#e5e5e5',
-        border: '1px solid rgba(255,255,255,0.1)',
-        backgroundImage: 'none' // MUI Dialogs can have a default gradient
+        bgcolor: "#0a0f18ff",
+        color: 'white',
+        border: `1px solid rgba(52, 211, 153, 0.15)`,
+        backgroundImage: 'none',
+        borderRadius: 3
       }
     }
   };
 
+  const inputStyle = {
+    '& label': { color: TEXT_MUTED },
+    '& label.Mui-focused': { color: ACCENT_COLOR },
+    '& .MuiOutlinedInput-root': {
+      bgcolor: MAIN_BG_COLOR,
+      color: 'white',
+      borderRadius: 2,
+      '& fieldset': { borderColor: `rgba(52, 211, 153, 0.2)` },
+      '&:hover fieldset': { borderColor: ACCENT_COLOR },
+      '&.Mui-focused fieldset': { borderColor: ACCENT_COLOR, borderWidth: '2px' },
+    },
+    '& .MuiInputBase-input::placeholder': {
+      color: TEXT_MUTED,
+      opacity: 1,
+    }
+  };
+
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: "#0a0a0a", color: "#e5e5e5" }}>
+    <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", bgcolor: MAIN_BG_COLOR, color: "white" }}>
+        <style>{`
+            @keyframes logoPulse {
+                0%, 100% {
+                    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+                }
+                50% {
+                    box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+                }
+            }
+
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-3px);
+                }
+            }
+        `}</style>
+      
       {/* Sidebar for large screens (md and up) */}
-      <Box sx={{ display: { xs: "none", md: "block" } }}>{SidebarContent}</Box>
+      <Box sx={{ display: { xs: "none", md: "block" }, borderRight: `1px solid rgba(52, 211, 153, 0.2)` }}>
+        {SidebarContent}
+      </Box>
 
       {/* Drawer for small screens (xs and sm) */}
-      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: '#1a1a1a' } }}>
+      <Drawer anchor="left" open={sidebarOpen} onClose={toggleSidebar} PaperProps={{ sx: { bgcolor: SIDEBAR_COLOR } }}>
         {SidebarContent}
       </Drawer>
 
@@ -266,9 +388,8 @@ export default function KnowledgeBasePage() {
         <Box
           component="header"
           sx={{
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
-            bgcolor: "rgba(0,0,0,0.8)",
-            backdropFilter: 'blur(8px)',
+            borderBottom: `1px solid rgba(52, 211, 153, 0.2)`,
+            bgcolor: MAIN_BG_COLOR,
             px: { xs: 2, md: 3 },
             display: "flex",
             alignItems: "center",
@@ -281,7 +402,7 @@ export default function KnowledgeBasePage() {
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <IconButton
-              sx={{ display: { xs: "inline-flex", md: "none" }, color: "#10b981" }}
+              sx={{ display: { xs: "inline-flex", md: "none" }, color: ACCENT_COLOR }}
               onClick={toggleSidebar}
             >
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -289,9 +410,9 @@ export default function KnowledgeBasePage() {
             <Box>
               <Typography
                 variant="h6"
-                fontWeight="600"
+                fontWeight="bold"
                 sx={{
-                  background: "linear-gradient(to right, #34d399, #10b981)",
+                  background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -310,7 +431,7 @@ export default function KnowledgeBasePage() {
               <Typography variant="h4" fontWeight="bold">
                 Knowledge Base
               </Typography>
-              <Typography variant="body2" color="#9ca3af">
+              <Typography variant="body2" color={TEXT_MUTED}>
                 Browse articles and solutions for common IT issues.
               </Typography>
             </Box>
@@ -319,7 +440,10 @@ export default function KnowledgeBasePage() {
               startIcon={<Plus size={16} />}
               onClick={() => setIsCreateDialogOpen(true)}
               sx={{
-                background: "linear-gradient(to right, #34d399, #10b981)",
+                background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
+                color: 'black',
+                fontWeight: 700,
+                borderRadius: 2,
                 "&:hover": { opacity: 0.9 }
               }}
             >
@@ -337,23 +461,15 @@ export default function KnowledgeBasePage() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search size={20} color="#9ca3af" />
+                  <Search size={20} color={TEXT_MUTED} />
                 </InputAdornment>
               ),
             }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#1a1a1a",
-                color: "#e5e5e5",
-                "& fieldset": { borderColor: "rgba(255, 255, 255, 0.1)" },
-                "&:hover fieldset": { borderColor: "rgba(255, 255, 255, 0.3)" },
-                "&.Mui-focused fieldset": { borderColor: "#10b981" },
-              },
-            }}
+            sx={inputStyle}
           />
           
-          {/* Stats Cards */}
-          <Grid container spacing={2}>
+          {/* Stats Cards - REFINED */}
+          <Grid container spacing={3}>
             {[
               { icon: BookOpen, value: mockArticles.length, label: "Total Articles" },
               { icon: Eye, value: mockArticles.reduce((s, a) => s + a.viewCount, 0), label: "Total Views" },
@@ -361,15 +477,27 @@ export default function KnowledgeBasePage() {
               { icon: Tag, value: categories.length, label: "Categories" },
             ].map((stat, index) => (
               <Grid item xs={12} sm={6} md={3} key={index}>
-                <Card sx={{ bgcolor: "#111", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <Card 
+                  sx={{ 
+                    bgcolor: DARK_CARD_COLOR, 
+                    border: `1px solid rgba(52, 211, 153, 0.15)`, 
+                    borderRadius: 3,
+                    transition: 'all 0.3s',
+                    minWidth: 240,
+                    '&:hover': {
+                        transform: 'translateY(-4px)',
+                        boxShadow: CARD_GLOW_SHADOW,
+                    }
+                  }}
+                >
                   <CardContent>
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <Avatar sx={{ bgcolor: 'rgba(52, 211, 153, 0.1)', color: '#34d399' }} variant="rounded">
+                    <Stack direction="row" spacing={3} alignItems="center">
+                      <Avatar sx={{ bgcolor: CARD_HOVER_BG, color: ACCENT_COLOR }} variant="rounded">
                         <stat.icon size={20} />
                       </Avatar>
                       <Box>
-                        <Typography variant="h5" fontWeight="bold">{stat.value}</Typography>
-                        <Typography variant="caption" color="#9ca3af">{stat.label}</Typography>
+                        <Typography variant="h5" fontWeight="bold" color="white">{stat.value}</Typography>
+                        <Typography variant="caption" color={TEXT_MUTED}>{stat.label}</Typography>
                       </Box>
                     </Stack>
                   </CardContent>
@@ -385,7 +513,9 @@ export default function KnowledgeBasePage() {
               onChange={handleTabChange}
               textColor="inherit"
               sx={{
-                "& .MuiTabs-indicator": { background: "linear-gradient(to right, #34d399, #10b981)" },
+                "& .MuiTabs-indicator": { background: ACCENT_COLOR },
+                "& .MuiTab-root": { color: TEXT_MUTED, fontWeight: 'medium' },
+                "& .Mui-selected": { color: ACCENT_COLOR, fontWeight: 'bold' },
               }}
             >
               <Tab label="All Articles" value="all" />
@@ -393,39 +523,53 @@ export default function KnowledgeBasePage() {
               <Tab label="Recently Updated" value="recent" />
             </Tabs>
             <Box sx={{ mt: 3 }}>
-              <Grid container spacing={2}>
+              <Grid container spacing={3}>
                 {getArticlesByTab(tabValue).map((article) => (
                   <Grid item xs={12} sm={6} lg={4} key={article.id}>
                     <Card
                       sx={{
                         cursor: "pointer",
-                        bgcolor: "#111",
-                        border: "1px solid rgba(255,255,255,0.1)",
+                        bgcolor: "#11182780",
+                        border: `1px solid rgba(52, 211, 153, 0.1)`,
                         height: '100%',
-                        "&:hover": { borderColor: "rgba(52, 211, 153, 0.5)" },
+                        borderRadius: 3,
+                        transition: 'all 0.3s',
+                        '&:hover': { 
+                            borderColor: ACCENT_COLOR, 
+                            boxShadow: CARD_GLOW_SHADOW,
+                            transform: 'translateY(-2px)'
+                        },
                         display: 'flex',
                         flexDirection: 'column'
                       }}
                       onClick={() => setSelectedArticle(article)}
                     >
                       <CardHeader
-                        title={<Typography variant="subtitle1" fontWeight={600}>{article.title}</Typography>}
-                        action={<Chip label={article.category} size="small" sx={{ bgcolor: 'rgba(255,255,255,0.1)', color: '#e5e5e5' }} />}
+                        title={<Typography variant="subtitle1" fontWeight={700} color="white">{article.title}</Typography>}
+                        action={<Chip label={article.category} size="small" sx={{ bgcolor: MAIN_BG_COLOR, color: ACCENT_COLOR }} />}
                       />
                       <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                        
+                        {/* Tags */}
+                        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 1 }}>
                           {article.tags.map((tag) => (
-                            <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.2)', color: '#9ca3af' }}/>
+                            <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ borderColor: `rgba(52, 211, 153, 0.2)`, color: TEXT_MUTED }}/>
                           ))}
                         </Stack>
-                        <Stack direction="row" spacing={3} mt={2} alignItems="center" color="#9ca3af">
+                        
+                        {/* Stats */}
+                        <Stack direction="row" spacing={3} mt={1} alignItems="center" color={TEXT_MUTED}>
                           <Stack direction="row" spacing={0.5} alignItems="center">
-                            <Eye size={14} />
-                            <Typography variant="caption">{article.viewCount}</Typography>
+                            <Eye size={14} color={ACCENT_COLOR} />
+                            <Typography variant="caption" fontWeight={600}>{article.viewCount} Views</Typography>
                           </Stack>
                           <Stack direction="row" spacing={0.5} alignItems="center">
-                            <ThumbsUp size={14} />
-                            <Typography variant="caption">{article.helpfulCount}</Typography>
+                            <ThumbsUp size={14} color={ACCENT_COLOR} />
+                            <Typography variant="caption" fontWeight={600}>{article.helpfulCount} Helpful</Typography>
+                          </Stack>
+                          <Stack direction="row" spacing={0.5} alignItems="center" sx={{ display: { xs: 'none', lg: 'flex'} }}>
+                            <Clock size={14} />
+                            <Typography variant="caption">Updated {new Date(article.updatedAt).toLocaleDateString()}</Typography>
                           </Stack>
                         </Stack>
                       </CardContent>
@@ -451,29 +595,47 @@ export default function KnowledgeBasePage() {
               <DialogTitle fontWeight="bold">{selectedArticle.title}</DialogTitle>
               <DialogContent>
                   <Stack spacing={2}>
-                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                        <Chip label={selectedArticle.category} size="small" sx={{ bgcolor: 'rgba(255,255,255,0.1)', color: '#e5e5e5' }} />
-                        {selectedArticle.tags.map((tag) => (
-                        <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.2)', color: '#9ca3af' }} />
-                        ))}
-                    </Stack>
-                    <Stack direction="row" spacing={3} alignItems="center" color="#9ca3af">
-                        <Stack direction="row" spacing={0.5} alignItems="center"><Eye size={16} /><Typography variant="body2">{selectedArticle.viewCount} views</Typography></Stack>
-                        <Stack direction="row" spacing={0.5} alignItems="center"><ThumbsUp size={16} /><Typography variant="body2">{selectedArticle.helpfulCount} helpful</Typography></Stack>
-                        <Stack direction="row" spacing={0.5} alignItems="center"><Clock size={16} /><Typography variant="body2">Updated {new Date(selectedArticle.updatedAt).toLocaleDateString()}</Typography></Stack>
-                    </Stack>
-                    <Box sx={{ mt: 1, typography: "body2", whiteSpace: "pre-wrap", color: '#d4d4d4', lineHeight: 1.7 }}>
-                        {selectedArticle.content}
-                    </Box>
-                    <Stack direction="row" spacing={1.5} mt={2} alignItems="center">
-                        <Typography variant="body2" color="#9ca3af">Was this article helpful?</Typography>
-                        <Button size="small" variant="outlined" startIcon={<ThumbsUp size={14} />} sx={{ color: '#34d399', borderColor: '#34d399', '&:hover': {borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)'} }}>Yes</Button>
-                        <Button size="small" variant="outlined" sx={{ color: '#9ca3af', borderColor: 'rgba(255,255,255,0.2)', '&:hover': {borderColor: '#9ca3af', backgroundColor: 'rgba(156, 163, 175, 0.1)'} }}>No</Button>
-                    </Stack>
+                      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                          <Chip label={selectedArticle.category} size="small" sx={{ bgcolor: MAIN_BG_COLOR, color: ACCENT_COLOR }} />
+                          {selectedArticle.tags.map((tag) => (
+                          <Chip key={tag} label={tag} size="small" variant="outlined" sx={{ borderColor: `rgba(52, 211, 153, 0.2)`, color: TEXT_MUTED }} />
+                          ))}
+                      </Stack>
+                      <Stack direction="row" spacing={3} alignItems="center" color={TEXT_MUTED}>
+                          <Stack direction="row" spacing={0.5} alignItems="center"><Eye size={16} color={ACCENT_COLOR} /><Typography variant="body2">{selectedArticle.viewCount} views</Typography></Stack>
+                          <Stack direction="row" spacing={0.5} alignItems="center"><ThumbsUp size={16} color={ACCENT_COLOR} /><Typography variant="body2">{selectedArticle.helpfulCount} helpful</Typography></Stack>
+                          <Stack direction="row" spacing={0.5} alignItems="center"><Clock size={16} /><Typography variant="body2">Updated {new Date(selectedArticle.updatedAt).toLocaleDateString()}</Typography></Stack>
+                      </Stack>
+                      <Box sx={{ mt: 1, typography: "body2", whiteSpace: "pre-wrap", color: 'white', lineHeight: 1.7, p: 2, bgcolor: MAIN_BG_COLOR, borderRadius: 2 }}>
+                          {selectedArticle.content}
+                      </Box>
+                      <Divider sx={{ bgcolor: 'rgba(52, 211, 153, 0.2)' }} />
+                      <Stack direction="row" spacing={1.5} mt={2} alignItems="center">
+                          <Typography variant="body2" color={TEXT_MUTED}>Was this article helpful?</Typography>
+                          <Button 
+                              size="small" 
+                              variant="outlined" 
+                              startIcon={<ThumbsUp size={14} />} 
+                              sx={{ 
+                                  color: ACCENT_COLOR, 
+                                  borderColor: ACCENT_COLOR, 
+                                  '&:hover': {borderColor: ACCENT_HOVER_COLOR, backgroundColor: CARD_HOVER_BG} 
+                              }}
+                          >Yes</Button>
+                          <Button 
+                              size="small" 
+                              variant="outlined" 
+                              sx={{ 
+                                  color: TEXT_MUTED, 
+                                  borderColor: `#34d39933`, 
+                                  '&:hover': {borderColor: TEXT_MUTED, backgroundColor: CARD_HOVER_BG} 
+                              }}
+                          >No</Button>
+                      </Stack>
                   </Stack>
               </DialogContent>
               <DialogActions>
-                  <Button onClick={() => setSelectedArticle(null)} sx={{ color: '#e5e5e5' }}>Close</Button>
+                  <Button onClick={() => setSelectedArticle(null)} sx={{ color: "white", bgcolor:"#11182780",border:"1.5px solid #34d39933" }}>Close</Button>
               </DialogActions>
             </>
         )}
@@ -490,18 +652,25 @@ export default function KnowledgeBasePage() {
         <DialogTitle fontWeight="bold">Create New Article</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
-            <TextField label="Title" variant="outlined" fullWidth />
-            <TextField label="Category" variant="outlined" fullWidth />
-            <TextField label="Tags (comma separated)" variant="outlined" fullWidth />
-            <TextField label="Content" variant="outlined" multiline rows={8} fullWidth />
+            <TextField label="Title" variant="outlined" fullWidth sx={inputStyle} />
+            <TextField label="Category" variant="outlined" fullWidth sx={inputStyle} />
+            <TextField label="Tags (comma separated)" variant="outlined" fullWidth sx={inputStyle} />
+            <TextField label="Content" variant="outlined" multiline rows={8} fullWidth sx={inputStyle} />
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsCreateDialogOpen(false)} sx={{ color: '#9ca3af' }}>Cancel</Button>
-          <Button onClick={() => setIsCreateDialogOpen(false)} variant="contained" sx={{
-            background: "linear-gradient(to right, #34d399, #10b981)",
-            "&:hover": { opacity: 0.9 }
-          }}>
+          <Button onClick={() => setIsCreateDialogOpen(false)} sx={{ color: TEXT_MUTED }}>Cancel</Button>
+          <Button 
+            onClick={() => setIsCreateDialogOpen(false)} 
+            variant="contained" 
+            sx={{
+              background: `linear-gradient(to right, ${ACCENT_COLOR}, ${ACCENT_HOVER_COLOR})`,
+              color: 'black',
+              fontWeight: 700,
+              borderRadius: 2,
+              "&:hover": { opacity: 0.9 }
+            }}
+          >
             Create
           </Button>
         </DialogActions>
