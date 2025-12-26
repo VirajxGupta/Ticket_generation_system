@@ -17,7 +17,7 @@ app.use(express.json());
 
 // ✅ CORS enable
 app.use(cors({
-  origin: "https://ticket-generation-system-1.onrender.com", // frontend URL
+  origin: "http://localhost:5173", // frontend URL
   credentials: true
 }));
 
