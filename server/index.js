@@ -17,7 +17,7 @@ app.use(express.json());
 
 // ✅ CORS enable
 app.use(cors({
-  origin: "http://localhost:5173", // frontend URL
+  origin: "http://localhost:5173", "https://ticket-generation-system-pv6k.vercel.app/" // frontend URL
   credentials: true
 }));
 
