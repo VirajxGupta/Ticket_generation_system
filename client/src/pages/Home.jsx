@@ -149,11 +149,13 @@ export default function LandingPage() {
       margin: '0 auto',
       padding: '0 1.5rem',
     },
-    headerContent: {
+
+headerContent: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '1rem 0',
+      gap: '0.5rem',
     },
     logo: {
       display: 'flex',
